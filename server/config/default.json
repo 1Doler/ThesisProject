@@ -1,0 +1,5 @@
+{
+    "serverPort": 5000,
+    "dbUrl": "mongodb+srv://Doler:ReactApp@clusterthesis.x82pz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "jwtSecret": "Secret"
+}

@@ -1,0 +1,38 @@
+$bgcolor: #99cc60
+$maincolor: #ccff90
+$lightcolor: #ffffc2
+    
+table
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif
+    font-size: 14px
+    border-radius: 10px
+    border-spacing: 0
+    text-align: center
+    width: 100%
+    th
+        background: $bgcolor
+        color: white
+        padding: 10px 20px
+        &:first-child
+            border-top-left-radius: 10px
+        &:last-child
+            border-top-right-radius: 10px
+    th, td
+        border-style: solid
+        border-width: 0 2px 2px 0
+        border-color: $maincolor
+    td
+        padding: 10px 20px
+        background-color: white
+    .board_item__wrapper
+        &:last-child
+            td
+                &:first-child
+                    border-bottom-left-radius: 10px
+        &:last-child
+            td
+                &:last-child
+                    border-bottom-right-radius: 10px
+        &__text
+            text-decoration: none
+            color: black

@@ -1,0 +1,12 @@
+@mixin inp()
+    input
+        outline: none
+        border: none
+        &:focus
+            border: 1px solid black
+    
+.task
+    &__text
+        @include inp
+    &__description
+        @include inp

@@ -1,0 +1,91 @@
+$bgcolor: #99cc60
+$maincolor: #ccff90
+$lightcolor: #ffffc2
+.board
+    width: 1140px
+    margin: 0 auto
+    font-size: 20px
+    &__name
+        color: black
+    &__wrapper
+        display: flex
+        justify-content: left
+        &__item
+            padding: 12px
+            margin-right: 20px
+            background-color: $bgcolor
+            border-radius: 10px
+            width: 240px
+            max-height: 550px
+            &__nameTable
+                display: flex
+                justify-content: space-between
+                margin: 5px
+                color: white
+                text-align: left
+            .wr_ts
+                overflow-y: scroll
+                max-height: 550px
+                &::-webkit-scrollbar-track
+                    margin: 6px
+                    border-radius: 4px
+                &::-webkit-scrollbar
+                    width: 4px
+                &::-webkit-scrollbar-thumb
+                    border-radius: 4px
+                    background-color: #f0f2f5
+                &::-webkit-scrollbar-thumb
+                    
+                    background-color: #6a7d9b
+                &__nameTable
+                    font-size: 20px
+                    text-align: center
+                    color: white
+            &__form
+                input
+                    margin-top: 10px
+                    width: 170px
+                    border: 3px solid $maincolor
+                    border-radius: 5px
+                    margin-right: 5px
+                    background-color: white
+                button
+                    margin-top: 5px
+                    background-color: white
+                    border: 3px solid $maincolor
+                    border-radius: 5px
+            &__task
+                padding: 5px
+                margin: 6px 0 
+                background-color: white
+                border-radius: 10px
+                border: 3px solid $maincolor
+                font-size: 16px
+                div
+                    margin-top: 5px
+                &__status
+                    padding: 0px 10px
+                    display: inline-block
+                    font-size: 14px
+                    border-radius: 10px
+                    color: white
+                    text-transform: capitalize
+                hr
+                    ackground-color: silver
+                    height: 0.0001px
+                    border: 0.0001px solid silver
+                &__footer
+                    display: flex
+                    justify-content: space-between
+                    &__tag
+                       i
+                            color: #e44848
+                            font-size: 20px
+                &__dueDate
+                    
+                    font-size: 14px
+                    text-align: right
+
+
+                
+
