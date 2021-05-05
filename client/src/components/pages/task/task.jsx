@@ -5,13 +5,23 @@ import classes from './task.module.sass'
 import Button from '@material-ui/core/Button';
 
 export default class Task extends Component{
-    constructor({data}){
-        super({data});
+    constructor(props){
+        super(props);
+
+        const {data, tableId, taskId} = props;
+        const filter1 = data.filter((elem)=>{
+            return elem._id === tableId
+        })
+        const filter2 = filter1[0].task.filter((elem)=>{
+            return elem._id === taskId
+        })
+        const task_data = filter2[0];
+        const {textTask,_id, description, author} = task_data;
         this.state = {
-            text: data.textTask,
-            _id: data._id,
-            description: data.description,
-            author: data.author
+            text: textTask,
+            _id: _id,
+            description: description,
+            author: author
         }
     }
     
@@ -21,8 +31,10 @@ export default class Task extends Component{
     }
 
     render(){
-       const {data} = this.props;
-       const {_id, text, description, author} = this.state;
+        
+        
+        const {_id, text, description, author} = this.state;
+        
         return(
             <div className={classes.task}>
                 Task_ID: {_id}

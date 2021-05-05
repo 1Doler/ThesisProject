@@ -5,8 +5,10 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const Task = require('../models/Task')
+const Table = require('../models/Table')
 
 const router = Router()
+
 router.post('/pb',async (req,res)=>{
     try{
         const {data} = req.body;
@@ -41,7 +43,14 @@ router.post('/ontoggleimportant', async (req, res)=>{
         res.status(400).json({message: 'Ошибочка'})
     }
 })
-
+router.get('/table', async (req, res)=>{
+    try{
+        const alldata = await Table.find(); 
+        res.json(alldata);
+    }catch(e){
+        res.status(400).json({message: 'Ошибочка в TASK'})
+    }
+})
 router.post('/updatetask', async (req, res)=>{
     try{
         const data = req.body;

@@ -8,14 +8,14 @@ import classes from './board.module.sass'
 export default class Board extends Component{
     constructor(props){
         super(props);
-        this.state={}
+        this.state={
+            table_data: props.data
+        }
     }
 
     mapTable = (data) =>{
         return data.map(item =>{
-            
             return(
-                
                 <div key={item._id} className={classes.board__wrapper__item}>
                     <div className={classes.board__wrapper__item__nameTable}>
                         <b>{item.nameTable}</b>
@@ -24,20 +24,15 @@ export default class Board extends Component{
                     <div className={classes.wr_ts}>
                         {this.mapTask(item.task,item._id)}
                     </div>
-                   {/*  <form className={classes.board__wrapper__item__form}>
-                        <input type='textbox' placeholder='Add' ></input>
-                        <button>Add</button>
-                    </form> */}
                 </div>
             )
-            
         })
     }
     mapTask = (data,id) =>{
         return data.map(item =>{
             const link_task = '/task/'+ item._id;
             // COLOR PRIORITY 
-            let color_priority='';
+            let color_priority={};
             switch(item.priority){
                 case ('High'):
                     color_priority={color: 'red', fontSize: '15px',marginRight: '10px'};
@@ -50,7 +45,7 @@ export default class Board extends Component{
                     break;
             }
             // COLOR STATUS 
-            let color_status='';
+            let color_status={};
             switch(item.status){
                 case ('Ready'):
                     color_status={backgroundColor: '#64b5f6'};
@@ -66,7 +61,7 @@ export default class Board extends Component{
             return(
                 
                 <div key={item._id} className={classes.board__wrapper__item__task}>
-                    <Link to={link_task} style={{textDecoration: 'none', color: 'black'}} onClick={()=>{this.props.getIdTable(id)}}>
+                    <Link onClick={()=>this.props.getTableId(id)} to={link_task} style={{textDecoration: 'none', color: 'black'}}>
                         <div className={classes.board__wrapper__item__task__textTask}>
                             {item.textTask}
                         </div>
@@ -98,11 +93,17 @@ export default class Board extends Component{
     }
 
     render(){
-        const {data} = this.props;
-        const visuble = this.mapTable(data.table);
+        const {table_data} = this.state;
+        const {board_id} = this.props;
+        
+        const filter_data = table_data.filter((elem)=>{
+            return elem.boardId === board_id
+        })
+        const visuble = this.mapTable(filter_data).length ? this.mapTable(filter_data) : <h1>NOT DATA!!</h1>;
+        
         return(
             <div className={classes.board}>
-                <h1 className={classes.board__name}>{data.nameBoard}</h1>
+                {/* <h1 className={classes.board__name}>{table_data.nameBoard}</h1> */}
                 <div className={classes.board__wrapper}>
                     {visuble}
                 </div>
