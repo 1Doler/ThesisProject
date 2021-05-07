@@ -1,12 +1,21 @@
 $bgcolor: #99cc60
 $maincolor: #ccff90
 $lightcolor: #ffffc2
+$bcg: #F5F5F5
+
 .board
-    width: 1140px
-    margin: 0 auto
-    font-size: 20px
+    display: flex
+    justify-content: left
+    background-color: $bcg
     &__name
+        width: 1140px
+        margin: 0 auto
+        font-size: 20px
         color: black
+    .section__board
+        padding: 20px
+        .title
+            margin-bottom: 20px
     &__wrapper
         display: flex
         justify-content: left
@@ -16,7 +25,7 @@ $lightcolor: #ffffc2
             background-color: $bgcolor
             border-radius: 10px
             width: 240px
-            max-height: 550px
+            max-height: 650px
             &__nameTable
                 display: flex
                 justify-content: space-between
@@ -25,7 +34,7 @@ $lightcolor: #ffffc2
                 text-align: left
             .wr_ts
                 overflow-y: scroll
-                max-height: 440px
+                max-height: 540px
                 &::-webkit-scrollbar-track
                     margin: 6px
                     border-radius: 4px
@@ -71,6 +80,7 @@ $lightcolor: #ffffc2
                     color: white
                     text-transform: capitalize
                 hr
+                    margin-top: 5px
                     ackground-color: silver
                     height: 0.0001px
                     border: 0.0001px solid silver

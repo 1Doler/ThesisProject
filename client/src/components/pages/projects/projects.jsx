@@ -1,10 +1,13 @@
 import React, { Component} from 'react'
+
 import Snackbar  from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import classes from './board.module.sass'
 
 import ProjectItem from './project_item'
+import Nav  from '../../common/nav/Nav'
 import Search from '../../common/Search.jsx'
+
 export default class Projects extends Component{
     constructor(props){
         super(props);
@@ -41,21 +44,23 @@ export default class Projects extends Component{
        
         const vs = !search_data.length?board_data: search_data;
         return(
-            <div className={classes.container}>{/* 
-                <button onClick={()=>{this.setState({open: !this.state.open})}}>fasd</button> */}
-                <Snackbar
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                    open={this.state.open}
-                    onClose={handleClose}
-                >
-                    <Alert onClose={handleClose} severity="warning">
-                        This is a success message!
-                    </Alert>
-                </Snackbar>
-                <div className={classes.board}>
-                    <h2>Page Board</h2>
-                    <Search Submit={onSearch}/>
-                    <ProjectItem data={vs} onToggleImportant={onToggleImportant}/>
+            <div className={classes.sectionProjects}>
+                <Nav />
+                <div className={classes.container}>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                        open={this.state.open}
+                        onClose={handleClose}
+                        >
+                        <Alert onClose={handleClose} severity="warning">
+                            Проект с такие название не существует!
+                        </Alert>
+                    </Snackbar>
+                    <div className={classes.board}>
+                        <h2>Page Projects</h2>
+                        <Search Submit={onSearch}/>
+                        <ProjectItem data={vs} onToggleImportant={onToggleImportant}/>
+                    </div>
                 </div>
             </div>
             

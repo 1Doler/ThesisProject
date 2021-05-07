@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import * as moment from 'moment'
 
+import Nav from '../../common/nav/Nav'
+
+import * as moment from 'moment'
 
 import classes from './board.module.sass'
 
@@ -103,10 +105,16 @@ export default class Board extends Component{
         
         return(
             <div className={classes.board}>
-                {/* <h1 className={classes.board__name}>{table_data.nameBoard}</h1> */}
-                <div className={classes.board__wrapper}>
-                    {visuble}
+                <Nav />
+                <div className={classes.section__board}>
+                    <h2 className={classes.title}>
+                        Page Board
+                    </h2>
+                    <div className={classes.board__wrapper}>
+                        {visuble}
+                    </div>
                 </div>
+                
             </div>
         )
     }

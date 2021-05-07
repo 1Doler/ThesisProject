@@ -44,7 +44,9 @@ const App = () =>{
     },[boardData])
     
 
-    
+    const updateTable = () =>{
+      return <div>Null</div>
+    }
    
     const onToggleImportant = async (_id) =>{
         try{
@@ -98,6 +100,7 @@ const App = () =>{
                             data={table}
                             tableId={tableId} 
                             taskId={id}
+                            updateTable={updateTable}
                         />
                     }
                 }/>
