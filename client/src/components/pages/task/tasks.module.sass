@@ -1,0 +1,36 @@
+$maincolor: #99cc60
+$bgcolortask: #ffffc2
+
+.tasks
+    background-color: white
+    width: 340px
+    height: 700px
+    font-size: 14px
+    border: 3px solid $maincolor
+    padding-top: 10px
+    &__nameTable
+        font-size: 16px
+        font-weight: bold
+        border-bottom: 1px solid silver
+    &__wrapper
+        font-size: 14px
+        &__item
+            border-bottom: 1px solid silver
+            &:hover
+                background-color: $bgcolortask
+            &:hover &__text
+                color: #ec6464
+            &__ml
+                margin-left: 10px 
+            .link
+                text-decoration: none
+                color: black
+            &__index
+                color: $maincolor
+            &__text
+                
+            &__author
+                font-size: 12px
+                color: #666
+
+            
