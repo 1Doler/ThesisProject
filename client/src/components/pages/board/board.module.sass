@@ -3,6 +3,19 @@ $maincolor: #ccff90
 $lightcolor: #ffffc2
 $bcg: #F5F5F5
 
+@mixin btn()
+    font-size: 14px
+    margin-left: 20px
+    padding: 5px
+    color: white
+    background-color: #a6d4fa
+    border: 2px solid white
+    border-radius: 5px
+    &:hover
+        background-color: #90caf9
+        border: 2px solid white
+        cursor: pointer
+
 .board
     display: flex
     justify-content: left
@@ -12,29 +25,58 @@ $bcg: #F5F5F5
         margin: 0 auto
         font-size: 20px
         color: black
+    &__buttonAddTaskList
+        @include btn
+        margin-right: 10px
+        margin-bottom: 10px
+    &__buttonAddTask
+        @include btn
     .section__board
+        width: 100%
+        border-radius: 10px
         padding: 20px
         .title
             margin-bottom: 20px
     &__wrapper
         display: flex
         justify-content: left
+        background-color: white
+        padding: 20px
+        &__null
+            padding: 100px 0px
+            width: 180px
+            display: block-inline
+            margin: 0 auto
+            p
+                text-align: center
+                color: white
         &__item
             padding: 12px
             margin-right: 20px
             background-color: $bgcolor
             border-radius: 10px
             width: 240px
-            max-height: 650px
+            height: 560px
             &__nameTable
+                border-bottom: 2px solid $bcg
                 display: flex
                 justify-content: space-between
                 margin: 5px
                 color: white
                 text-align: left
+                i
+                    font-size: 20px
+            &__btnClose
+                &:hover
+                    color: #f44336
+                    cursor: pointer
+            &__btnAdd
+                &:hover
+                    color: $maincolor
+                    cursor: pointer
             .wr_ts
                 overflow-y: scroll
-                max-height: 540px
+                height: 510px
                 &::-webkit-scrollbar-track
                     margin: 6px
                     border-radius: 4px

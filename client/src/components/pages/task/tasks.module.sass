@@ -1,35 +1,47 @@
 $maincolor: #99cc60
-$bgcolortask: #ffffc2
+$bgcolortask: #003300
+$bgcolortask1: #e0f3e3
+$bgcolor: #99cc60
+$lightcolor: #ffffc2
 
 .tasks
     background-color: white
-    width: 340px
-    height: 700px
+    width: 260px
+    height: 703.2px
     font-size: 14px
-    border: 3px solid $maincolor
-    padding-top: 10px
+    border-right: 3px solid $maincolor
     &__nameTable
-        font-size: 16px
-        font-weight: bold
-        border-bottom: 1px solid silver
+        font-size: 15px
+        border-bottom: 1px solid $maincolor
+        padding-top: 10px
+        p
+            margin-bottom: 10px
+            margin-left: 15px
     &__wrapper
-        font-size: 14px
+        font-size: 13px
+        width: 100%
         &__item
-            border-bottom: 1px solid silver
+            padding: 10px
+            border-bottom: 1px solid $maincolor
+            height: 70px
             &:hover
-                background-color: $bgcolortask
+                background-color: $bgcolor
             &:hover &__text
-                color: #ec6464
+                color: white
+
             &__ml
-                margin-left: 10px 
+                margin: auto 0
             .link
                 text-decoration: none
                 color: black
             &__index
-                color: $maincolor
+                color: $bgcolortask
             &__text
                 
             &__author
+                margin-top: 10px
+                display: flex
+                justify-content: space-between
                 font-size: 12px
                 color: #666
 

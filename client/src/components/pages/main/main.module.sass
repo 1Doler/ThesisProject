@@ -1,0 +1,105 @@
+$authcolor: #383946
+$inpbcgcolor: #ebebeb
+$titlecolor: #355a0a
+@mixin btn()
+    font-size: 14px
+    padding: 5px
+    color: white
+    background-color: $authcolor
+    border: 2px solid white
+    border-radius: 5px
+    &:hover
+        background-color: #4f6832
+        border: 2px solid white
+        cursor: pointer
+@mixin inp()
+    display: flex
+    justify-content: center
+    margin-top: 5px
+    input
+        padding: 4px
+
+.container
+    width: 1140px
+    margin: 0 auto
+.main
+    &__nav
+        height: 60px
+        background-color: grey
+        color: white
+        padding: 20px
+    &__header
+        padding-bottom: 50px
+        margin-top: 40px
+        img
+            width: 250px
+            position: absolute
+            top: 100px
+            left: 760px
+        &__title
+            display: inline-block
+            font-size: 30px
+            font-weight: bold
+            color: $titlecolor
+            i
+                color: #355a0a
+        &__hr
+            margin: 20px 0
+            width: 250px
+            height: 1px
+            background-color: silver
+        &__descr
+            width: 500px
+            color: #355a0a
+            font-size: 15px
+    &__auth
+        margin-top: 30px
+        width: 300px
+        bordre: 1px solid $authcolor
+        &__title
+            background-color: $authcolor
+            border-top-left-radius: 10px
+            border-top-right-radius: 10px
+            text-align: center
+            padding: 10px 10px
+            color: white
+            font-weight: bold
+        &__inp
+            background-color: $inpbcgcolor
+            padding: 15px 0px
+            &__log
+               @include inp
+            &__pas
+                @include inp
+            &__btn
+                display: flex
+                justify-content: center
+                margin-top: 10px
+                &__log
+                    @include btn
+                    border-right: 1px solid white
+                    border-bottom-right-radius: 0
+                    border-top-right-radius: 0
+                &__reg
+                    @include btn
+                    border-left: 1px solid white
+                    border-bottom-left-radius: 0
+                    border-top-left-radius: 0
+    &__pminfo
+        background-color: #f7f7f7
+        padding: 50px 0
+        &__title
+            font-size: 25px
+            width: 600px
+            margin: 0 auto
+            color: $titlecolor
+            font-weight: bold
+        &__text
+            width: 600px
+            margin: 0 auto
+            margin-top: 20px
+            text-align: left 
+            font-size: 16px
+            color: #666666
+
+                

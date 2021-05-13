@@ -53,7 +53,7 @@ export default class Projects extends Component{
                         onClose={handleClose}
                         >
                         <Alert onClose={handleClose} severity="warning">
-                            Проект с такие название не существует!
+                            Проект с таким название не существует!
                         </Alert>
                     </Snackbar>
                     <div className={classes.board}>

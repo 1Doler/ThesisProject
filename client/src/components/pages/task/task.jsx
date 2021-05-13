@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from "react-router-dom"
 
 import Tasks from './tasks'
 
@@ -8,24 +9,49 @@ import classes from './task.module.sass'
 
 import Button from '@material-ui/core/Button';
 
-import Select from '../../common/select/select'
 
 export default class Task extends Component{
     constructor(props){
         super(props);
-
-        const {data, tableId, taskId} = props;
+        this.state = {
+            filt: null,
+            text: null,
+            _id: null,
+            description: null,
+            author: null,
+            status: null,
+            dueDate: null,
+            startDate: null,
+            createDate: null,
+            prioritynull: null,
+            duration: null,
+            completionPercentage: null,
+            performer: null
+        }
+    }
+    componentDidMount () {
+        this.getData()
+    }
+    componentWillReceiveProps(nextProps) {
+        if (this.props.taskId !== nextProps.taskId) 
+            this.getData(nextProps.taskId);
+            
+        
+      }
+    getData = (taskId = this.props.taskId) =>{
+        const {data, tableId,dataBoard,boardId} = this.props;
+        const b = dataBoard.filter(elem=> elem._id === boardId);
         const filter1 = data.filter((elem)=>{
             return elem._id === tableId
         })
         const filter2 = filter1[0].task.filter((elem)=>{
             return elem._id === taskId
         })
-        console.log(filter1)
         const task_data = filter2[0];
-        const {textTask,_id, description, author,status, dueDate, startDate, createDate, priority,completionPercentage} = task_data;
+        const {textTask,_id, description, author,status, dueDate, startDate, createDate, priority,completionPercentage, performer} = task_data;
         const dif = moment(dueDate).diff(moment(startDate),'days');
-        this.state = {
+        this.setState({
+            nameBoard: b[0].nameBoard,
             filt: filter1[0],
             text: textTask,
             _id,
@@ -37,20 +63,20 @@ export default class Task extends Component{
             createDate: moment(createDate).format('YYYY-MM-DD'),
             priority,
             duration: dif,
+            performer,
             completionPercentage
-        }
+        })
     }
-    
-    onChangeInput = (e) =>{
+    onChangeInput = async (e) =>{
         const name = e.target.name;
-        this.setState({[name]: e.target.value})
-        const {startDate, dueDate} = this.state
         
+        await this.setState({[name]: e.target.value})
+        const {startDate, dueDate} = this.state
+        this.setState({duration:moment(dueDate).diff(moment(startDate),'days')})
     }
 
     render(){
-        const {data} = this.props;
-        const {filt, text, description, author,status,createDate,dueDate,startDate,priority, duration,completionPercentage} = this.state;
+        const {filt, text, description, author,status,performer,dueDate,startDate,priority, duration,completionPercentage,_id,nameBoard} = this.state;
         const optionStatus = [
             <option value=""></option>,
             <option value="Ready">Ready</option>,
@@ -74,15 +100,24 @@ export default class Task extends Component{
         for(let i=0; i<=100; i+=10){
             optionCP.push(<option value={i}>{i}</option>)
         }
+        const {tableId} = this.props;
         
         return(
-            <div key={this.props.tableId} className={classes.taskPage}>
+            
+            <div key={tableId} className={classes.taskPage}>
                 
-                <Tasks data={filt}/>
+                <Tasks data={filt} id={_id}/>
 
                 <div className={classes.task}>
-                    <div className={classes.task__text}>
-                        <input value={text} type='text' name='text' onChange={(e)=>{this.onChangeInput(e)}}/>
+                    <div className={classes.task__mark}>
+                        <i class="fas fa-bookmark"> </i>
+                        <span>BE2-I1</span>
+                    </div>
+                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <div className={classes.task__text}>
+                            <input value={text} type='text' name='text' onChange={(e)=>{this.onChangeInput(e)}}/>
+                        </div>
+                        <Link to={'/board/'+this.props.boardId}><i className="fas fa-window-close" style={{fontSize: '30px'}}></i></Link>
                     </div>
                     <div className={classes.task__info}>
                         <div className={classes.task__info__author}>
@@ -91,14 +126,15 @@ export default class Task extends Component{
                         <span>|</span>
                         <div className={classes.task__info__nameTable}>
                             <i className="fas fa-briefcase"></i>
-                            NAME_BOARD
+                            {nameBoard}
                         </div>
                     </div>
                     <div className={classes.task__status}>
-                        <span>Current status </span> 
                         <select name="pets" id="pet-select" value={status} onChange={(e)=>{this.setState({status: e.target.value})}}>
                             {[...optionStatus]}
                         </select>
+                        <br/>
+                        <span>CURRENT STATUS </span> 
                     </div>
                     <div className={classes.task__description}>
                         <h2>Description</h2>
@@ -110,47 +146,60 @@ export default class Task extends Component{
                         <h2 className={classes.task__information__title}>
                             Task Information
                         </h2>
-                        <div className={classes.task__information__wrapper}>
-                            <div className={classes.task__information__wrapper__owner}>
-                                Owner: ...
-                            </div>
-                            <div className={classes.task__information__wrapper__startDate}>
-                                <div className={classes.text}>
-                                    startDate: 
-                                </div> 
-                                <input type='date' name='startDate' value={startDate} max={dueDate} onChange={(e)=>{this.onChangeInput(e)}}/>
-                            </div>
-                            <div className={classes.task__information__wrapper__dueDate}>
-                                <div className={classes.text}>
-                                    DueDate: 
+                        <div className={classes.box}>
+                            <div className={classes.task__information__wrapper}>
+                                <div className={classes.left}>
+                                    <div className={classes.task__information__wrapper__owner}>
+                                        <p>Owner</p> 
+                                        <select value={performer} onChange={(e)=>{this.setState({priority: e.target.value})}}>
+                                            <option value={performer}>{performer}</option>
+                                        </select>
+                                    </div>
+                                    <div className={classes.task__information__wrapper__startDate}>
+                                        <p className={classes.text}>
+                                            Start Date 
+                                        </p> 
+                                        <input type='date' name='startDate' value={startDate} max={dueDate} onChange={(e)=>{this.onChangeInput(e)}}/>
+                                    </div>
+                                    <div className={classes.task__information__wrapper__duration}>
+                                        <p className={classes.text}>
+                                            Duration 
+                                        </p>
+                                        <input type='text' name='duration' value={duration+' d'}/>
+                                    </div>
                                 </div>
-                                <input type='date' name='dueDate' min={startDate} value={dueDate} onChange={(e)=>{this.onChangeInput(e)}}/>
-                            </div>
-                            <div className={classes.task__information__wrapper__priority}>
-                                <div className={classes.text}>
-                                    Priority: 
+                                <div className={classes.right}>
+                                    <div className={classes.task__information__wrapper__priority}>
+                                        <p className={classes.text}>
+                                            Priority 
+                                        </p>
+                                        <select value={priority} onChange={(e)=>{this.setState({priority: e.target.value})}}>
+                                            {[...optionPriority]}
+                                        </select>
+                                    </div>
+                                    <div className={classes.task__information__wrapper__dueDate}>
+                                        <p className={classes.text}>
+                                            Due Date
+                                        </p>
+                                        <input type='date' name='dueDate' min={startDate} value={dueDate} onChange={(e)=>{this.onChangeInput(e)}}/>
+                                    </div>
+                                    <div className={classes.task__information__wrapper__completionPercentage}>
+                                        <p className={classes.text}>
+                                            Complit 
+                                        </p>
+                                        <select value={completionPercentage} onChange={(e)=>{this.setState({completionPercentage: e.target.value})}}>
+                                            {[...optionCP]}
+                                        </select>
+                                    </div>
                                 </div>
-                                <select value={priority} onChange={(e)=>{this.setState({priority: e.target.value})}}>
-                                    {[...optionPriority]}
-                                </select>
-                            </div>
-                            <div className={classes.task__information__wrapper__duration}>
-                                <div className={classes.text}>
-                                    Duration: 
-                                </div>
-                                <input type='text' name='duration' value={duration}/>
-                            </div>
-                            <div className={classes.task__information__wrapper__completionPercentage}>
-                                <div className={classes.text}>
-                                    Complit: 
-                                </div>
-                                <select value={completionPercentage} onChange={(e)=>{this.setState({completionPercentage: e.target.value})}}>
-                                    {[...optionCP]}
-                                </select>
                             </div>
                         </div>
                     </div>
-                    <Button variant="contained" color="primary">
+                    <Button 
+                        variant="contained" 
+                        color="secondary" 
+                        onClick={()=>this.props.updateTable(_id, tableId, description)}
+                    >
                         Save
                     </Button>
                 </div>

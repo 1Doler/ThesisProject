@@ -11,20 +11,37 @@ export default class Tasks extends Component{
     }
 
     mapTask=()=>{
-        const {data}=this.props;
+        const {data,id}=this.props;
+        
         return data.task.map((item, index)=>{
+            let color_priority={};
+            switch(item.priority){
+                case ('Hight'):
+                    color_priority={color: 'red', fontSize: '10px'};
+                    break;
+                case ('Medium'):
+                    color_priority={color: 'orange', fontSize: '10px'};
+                    break;
+                default:
+                    color_priority={color: 'green', fontSize: '10px'};
+                    break;
+            }
+            
+            const bgcolor = item._id===id ? {backgroundColor: '#f5e3e3', borderLeft: '3px solid red',fontWeight: 'bold'} : null;
+
+            const textsl = item.textTask.length>60 ? item.textTask.slice(0,60)+'...' : item.textTask;
+
             return (
-                <div className={classes.tasks__wrapper__item}>
+                <div className={classes.tasks__wrapper__item} style={bgcolor}>
                     <div className={classes.tasks__wrapper__item__ml}>
-                        <Link to='#' className={classes.link}>
-                            <div className={classes.tasks__wrapper__item__index}>
-                            {index+1}
-                            </div>
+                        <Link to={'/task/'+item._id} className={classes.link}>
                             <div className={classes.tasks__wrapper__item__text}>
-                                {item.textTask}
+                                <span className={classes.tasks__wrapper__item__index} style={{color: '#99cc60', fontWeight: 'bold'}}>BE2-T{index+1} </span>
+                                - {textsl}
                             </div>
                             <div className={classes.tasks__wrapper__item__author}>
                                 By: {item.author}
+                                <i className="fas fa-exclamation-triangle" style={color_priority}></i>
                             </div>
                     </Link>
                     </div>
@@ -32,18 +49,28 @@ export default class Tasks extends Component{
             )
         })
     }
-
-    render(){
-        return(
-            <div className={classes.tasks}>
+    isNull = (data) =>{
+        if(data){
+            return (<div className={classes.tasks}>
                 <div className={classes.tasks__nameTable}>
-                    {this.props.data.nameTable}
-                    {this.props.data.length}
+                    <p>
+                        {data.nameTable} 
+                        <span>({this.props.data.task.length})</span>
+                    </p>
                 </div>
                 <div className={classes.tasks__wrapper}>
                     {this.mapTask()}
                 </div>
-            </div>
+            </div>)
+        }
+    }
+    render(){
+        const {data}=this.props;
+        const ret = this.isNull(data);
+        return (
+            <div>
+                {ret}
+            </div>    
         )
     }
 }

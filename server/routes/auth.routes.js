@@ -6,16 +6,16 @@ const jwt = require('jsonwebtoken')
 
 
 const User = require('../models/User')
-const Task = require('../models/Task')
+const Board = require('../models/Board')
 
 const router = Router()
 
 router.post('/boarddata', async (req, res) =>{
     try{
-       /*  const data = new Task({text: "Text", author: "Author", status: "Ready"});
+       /*  const data = new Board({text: "Text", author: "Author", status: "Ready"});
         await data.save(); */
         const new_data = req.body;
-        const alldata = new Task(new_data); 
+        const alldata = new Board(new_data); 
         await alldata.save();
         res.send(alldata);
     }catch(e) {
