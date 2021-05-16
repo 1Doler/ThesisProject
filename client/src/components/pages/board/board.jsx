@@ -12,10 +12,17 @@ import classes from './board.module.sass'
 export default class Board extends Component{
     constructor(props){
         super(props);
+        
+        const localStorageRef = localStorage.getItem('table')
         this.state={
-            table_data: props.data,
+            table_data: props.data ? props.data : JSON.parse(localStorageRef),
             active_modal: false
         }
+    }
+   
+    componentDidUpdate() {
+        const {data} = this.props;
+        localStorage.setItem('table', JSON.stringify(data));
     }
 
     addTable = (boardId, nameTable) =>{
@@ -30,6 +37,7 @@ export default class Board extends Component{
         this.setState({table_data: newArr});
         this.props.deleteTaskList(newArr, id);
     }
+
 
     mapTable = (data) =>{
         return data.map(item =>{
@@ -112,7 +120,7 @@ export default class Board extends Component{
                         </div>
                         
                         <div className={classes.board__wrapper__item__task__dueDate}>
-                            DueDate: {moment(item.dueDate).format('DD.MM.YYYY')}
+                            {item.dueDate ? moment(item.dueDate).format('DD.MM.YYYY') : null}
                         </div> 
                     </div>
                 )
@@ -123,21 +131,25 @@ export default class Board extends Component{
                 
                 <div className={classes.board__wrapper__null}>
                     <p>
-                        Щелкните значок плюса, чтобы добавить новую
+                        Щелкните значок плюса, чтобы добавить новую задачу
                     </p>
                 </div>
             )
         }
     }
 
+    
+
     render(){
         const {table_data} = this.state;
-        const {board_id,addTaskList} = this.props;
-        
-        const filter_data = table_data.filter((elem)=>{
-            return elem.boardId === board_id
-        })
-        const visuble = this.mapTable(filter_data).length ? this.mapTable(filter_data) : <AddTaskList board_id={board_id} addTable={this.addTable} addTaskList={addTaskList}/>;
+        const {board_id,addTaskList,userId} = this.props;
+        let visuble = <h1>NOT DATA</h1>;
+        if(table_data){
+            const filter_data = table_data.filter((elem)=>{
+                return elem.boardId === board_id
+            })
+            visuble = this.mapTable(filter_data).length ? this.mapTable(filter_data) : <AddTaskList board_id={board_id} addTable={this.addTable} addTaskList={addTaskList}/>;
+        }
         
         return(
             <div className={classes.board}>
@@ -148,6 +160,29 @@ export default class Board extends Component{
                     addTable={this.addTable}
                     board_id={board_id}
                 />
+                <div className={classes.addTask}>
+                    <div className={classes.addTask__content}>
+                        <h3>Create Task</h3>
+                        <div className={classes.addTask__content__item}>
+                            <div className={classes.addTask__content__item__text}>
+                                Name Task: 
+                            </div>
+                            <input type='text'/>
+                        </div>
+                        <div className={classes.addTask__content__item}>
+                            <div className={classes.addTask__content__item__text}>
+                                Chose: 
+                            </div>
+                            <input type='text'/>
+                        </div>
+                        <div className={classes.addTask__content__item}>
+                        <div className={classes.addTask__content__item__text}>
+                                Name Task: 
+                            </div>
+                            <input type='text'/>
+                        </div>
+                    </div>
+                </div>
                 <Nav />
                 <div className={classes.section__board}>
                     <h2 className={classes.title}>

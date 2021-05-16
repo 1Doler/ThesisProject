@@ -2,6 +2,7 @@ const {Schema, model, Types} = require('mongoose')
 
 
 const Board = new Schema({
+    userId: {type: Types.ObjectId, ref: 'Users'},
     nameBoard: {type: String},
     description: {type: String},
     author: {type: String},

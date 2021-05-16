@@ -31,14 +31,23 @@ router.post('/deletetasklist', async (req, res)=>{
 router.post('/updatetask', async (req, res)=>{
     try{
         const data = req.body;
-        const {_id, tableId, description} = data;
+        const {_id, tableId, description, text, status, performer, startDate, priority, duration, completionPercentage, dueDate} = data;
         const result = await Table.update(
             {   
                 '_id': tableId,
-                'task._id': _id    
+                'task._id': _id,
+                    
             },
             {'$set':{
-                'task.$.description': description
+                'task.$.description': description,
+                'task.$.textTask': text,
+                'task.$.status': status,
+                'task.$.performer': performer,
+                'task.$.startDate': startDate,
+                'task.$.dueDate': dueDate,
+                'task.$.priority': priority,
+                'task.$.duration': duration,
+                'task.$.completionPercentage': completionPercentage
             }, function(error, success) {}}    
         )
         res.status(200).json({message: result});

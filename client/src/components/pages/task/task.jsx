@@ -10,6 +10,7 @@ import classes from './task.module.sass'
 import Button from '@material-ui/core/Button';
 
 
+
 export default class Task extends Component{
     constructor(props){
         super(props);
@@ -26,17 +27,20 @@ export default class Task extends Component{
             prioritynull: null,
             duration: null,
             completionPercentage: null,
-            performer: null
+            performer: null,
+            isShow: true
         }
     }
+    
     componentDidMount () {
-        this.getData()
+        this.getData();
+        /* if (this.multilineTextarea) {
+            this.multilineTextarea.style.height = 'auto';
+        } */
     }
     componentWillReceiveProps(nextProps) {
         if (this.props.taskId !== nextProps.taskId) 
             this.getData(nextProps.taskId);
-            
-        
       }
     getData = (taskId = this.props.taskId) =>{
         const {data, tableId,dataBoard,boardId} = this.props;
@@ -49,7 +53,8 @@ export default class Task extends Component{
         })
         const task_data = filter2[0];
         const {textTask,_id, description, author,status, dueDate, startDate, createDate, priority,completionPercentage, performer} = task_data;
-        const dif = moment(dueDate).diff(moment(startDate),'days');
+        
+        const dif = dueDate && startDate ? moment(dueDate).diff(moment(startDate),'days') : '';
         this.setState({
             nameBoard: b[0].nameBoard,
             filt: filter1[0],
@@ -58,8 +63,8 @@ export default class Task extends Component{
             description,
             author,
             status,
-            dueDate: moment(dueDate).format('YYYY-MM-DD'),
-            startDate: moment(startDate).format('YYYY-MM-DD'),
+            dueDate: dueDate?moment(dueDate).format('YYYY-MM-DD'):null,
+            startDate: startDate?moment(startDate).format('YYYY-MM-DD'):null,
             createDate: moment(createDate).format('YYYY-MM-DD'),
             priority,
             duration: dif,
@@ -74,9 +79,27 @@ export default class Task extends Component{
         const {startDate, dueDate} = this.state
         this.setState({duration:moment(dueDate).diff(moment(startDate),'days')})
     }
-
+    changeTextarea = (e) => {
+        this.setState({description: e.target.value})
+    }
+    
+    isShow = () =>{
+        this.setState({isShow: !this.state.isShow})
+        if(this.state.isShow)
+        {
+            this.multilineTextarea.style.height = 'auto';
+            this.multilineTextarea.style.height = this.multilineTextarea.scrollHeight + 'px';
+        }
+        else
+        {
+            this.multilineTextarea.style.height = '39px';
+        }
+    }
+    
     render(){
         const {filt, text, description, author,status,performer,dueDate,startDate,priority, duration,completionPercentage,_id,nameBoard} = this.state;
+        
+        
         const optionStatus = [
             <option value=""></option>,
             <option value="Ready">Ready</option>,
@@ -107,12 +130,13 @@ export default class Task extends Component{
             <div key={tableId} className={classes.taskPage}>
                 
                 <Tasks data={filt} id={_id}/>
-
+                
                 <div className={classes.task}>
                     <div className={classes.task__mark}>
                         <i class="fas fa-bookmark"> </i>
                         <span>BE2-I1</span>
                     </div>
+                    
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                         <div className={classes.task__text}>
                             <input value={text} type='text' name='text' onChange={(e)=>{this.onChangeInput(e)}}/>
@@ -137,9 +161,15 @@ export default class Task extends Component{
                         <span>CURRENT STATUS </span> 
                     </div>
                     <div className={classes.task__description}>
-                        <h2>Description</h2>
+                        
+                        <h2>Description <i class="fas fa-expand-alt" onClick={()=>this.isShow()}></i></h2>
                         <div className={classes.task__description__text}>
-                            <input value={description} type='text' name='description' onChange={(e)=>{this.onChangeInput(e)}}/>
+                            
+                            <textarea 
+                                onChange={(e)=>this.changeTextarea(e)}
+                                ref={ref => this.multilineTextarea = ref} 
+                                value={description} name='description' 
+                            />
                         </div>
                     </div>
                     <div className={classes.task__information}>
@@ -165,7 +195,7 @@ export default class Task extends Component{
                                         <p className={classes.text}>
                                             Duration 
                                         </p>
-                                        <input type='text' name='duration' value={duration+' d'}/>
+                                        <input type='text' name='duration' readOnly value={duration + ' d'}/>
                                     </div>
                                 </div>
                                 <div className={classes.right}>
@@ -198,7 +228,7 @@ export default class Task extends Component{
                     <Button 
                         variant="contained" 
                         color="secondary" 
-                        onClick={()=>this.props.updateTable(_id, tableId, description)}
+                        onClick={()=>this.props.updateTable({_id, tableId, description, text,status,performer,dueDate,startDate,priority, duration,completionPercentage})}
                     >
                         Save
                     </Button>

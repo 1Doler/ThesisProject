@@ -19,9 +19,10 @@ router.post('/pb',async (req,res)=>{
         res.status(400).json({message: 'Ашибка'});
     }
 })
-router.get('/boarddata1', async (req, res) =>{
+router.post('/boarddata1', async (req, res) =>{
     try{
-        const alldata = await Board.find(); 
+        
+        const alldata = await Board.find({userId: req.body.id}); 
         res.json(alldata);
     }catch(e) {
         res.status(400).json({message: 'Что-то пошло не так'});

@@ -1,6 +1,7 @@
 $authcolor: #383946
 $inpbcgcolor: #ebebeb
 $titlecolor: #355a0a
+$textcolor: #1b1e29
 @mixin btn()
     font-size: 14px
     padding: 5px
@@ -9,7 +10,7 @@ $titlecolor: #355a0a
     border: 2px solid white
     border-radius: 5px
     &:hover
-        background-color: #4f6832
+        background-color: #648dae
         border: 2px solid white
         cursor: pointer
 @mixin inp()
@@ -23,26 +24,35 @@ $titlecolor: #355a0a
     width: 1140px
     margin: 0 auto
 .main
-    &__nav
-        height: 60px
-        background-color: grey
-        color: white
-        padding: 20px
+    background-color: #f6f8f9
+    &__modal
+        height: 100vh
+        width: 100vw
+        background-color: rgba(0,0,0,0.4)
+        position: fixed
+        top: 0
+        left: 0
+        display: flex
+        justify-content: center
+        align-items: center
+        z-index: 10
     &__header
         padding-bottom: 50px
-        margin-top: 40px
+        padding-top: 90px 
+        min-height: 280px
         img
             width: 250px
             position: absolute
-            top: 100px
+            top: 50px
             left: 760px
+            z-index: 1
         &__title
             display: inline-block
             font-size: 30px
             font-weight: bold
-            color: $titlecolor
+            color: #90caf9
             i
-                color: #355a0a
+                color: #90caf9
         &__hr
             margin: 20px 0
             width: 250px
@@ -50,8 +60,13 @@ $titlecolor: #355a0a
             background-color: silver
         &__descr
             width: 500px
-            color: #355a0a
+            color: #648dae
             font-size: 15px
+        &__btn
+            @include btn
+            font-size: 20px
+            width: 120px
+            margin-top: 30px    
     &__auth
         margin-top: 30px
         width: 300px
@@ -64,6 +79,11 @@ $titlecolor: #355a0a
             padding: 10px 10px
             color: white
             font-weight: bold
+            i
+                margin-left: 10px
+                &:hover
+                    cursor: pointer
+                    color: grey
         &__inp
             background-color: $inpbcgcolor
             padding: 15px 0px
@@ -86,20 +106,84 @@ $titlecolor: #355a0a
                     border-bottom-left-radius: 0
                     border-top-left-radius: 0
     &__pminfo
-        background-color: #f7f7f7
+        background-color: white
         padding: 50px 0
+        img
+            width: 450px
         &__title
+            margin-top: 20px
             font-size: 25px
             width: 600px
-            margin: 0 auto
-            color: $titlecolor
+            color: $textcolor
             font-weight: bold
         &__text
             width: 600px
-            margin: 0 auto
             margin-top: 20px
             text-align: left 
             font-size: 16px
             color: #666666
-
-                
+        &__wh
+            background-color: #f6f8f9
+            padding-top: 100px
+            display: flex
+            justify-content: space-between
+            img
+                width: 500px
+                margin-bottom: 30px
+            &__title
+                margin-top: 100px
+                font-size: 25px
+                width: 600px
+                color: $textcolor
+                font-weight: bold
+            &__text
+                width: 500px
+                margin-top: 20px
+                text-align: left 
+                font-size: 15px
+                color: #666666  
+    &__capability
+        padding: 10px 0 40px
+        background-color: white
+        &__title
+            color: $textcolor
+            font-size: 25px
+            font-weight: bold
+        &__wrapper
+            margin-top: 45px
+            display: flex
+            justify-content: space-between
+            &__item
+                width: 250px
+                &__icon
+                    font-size: 35px
+                &__title
+                    margin-top: 8px
+                    font-size: 16px
+                    font-weight: bold
+                    color: $textcolor
+                &__descr
+                    color: #000000  
+                    margin-top: 10px
+                    font-size: 14px
+    &__last
+        min-height: 260px
+        padding: 40px 0
+        background: url('./bi.jpg') center (center/cover) no-repeat
+        &__title
+            color: white
+            font-size: 35px
+            font-weight: bold
+            text-align: left
+        &__descr
+            margin-top: 10px
+            width: 500px
+            color: white 
+            font-size: 25px
+            text-align: left
+        &__btn
+            margin-top: 20px
+            @include btn
+            font-size: 25px
+            border: 2px solid white
+            /** background-color: #90caf9 **/

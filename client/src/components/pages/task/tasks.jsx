@@ -36,7 +36,7 @@ export default class Tasks extends Component{
                     <div className={classes.tasks__wrapper__item__ml}>
                         <Link to={'/task/'+item._id} className={classes.link}>
                             <div className={classes.tasks__wrapper__item__text}>
-                                <span className={classes.tasks__wrapper__item__index} style={{color: '#99cc60', fontWeight: 'bold'}}>BE2-T{index+1} </span>
+                                <span className={classes.tasks__wrapper__item__index} style={{color: '#f48fb1', fontWeight: 'bold'}}>BE2-T{index+1} </span>
                                 - {textsl}
                             </div>
                             <div className={classes.tasks__wrapper__item__author}>

@@ -28,14 +28,18 @@ router.post(
     try{
         const {email, password} = req.body;
         const candidate = await User.findOne({email})
+        let isLog = true
         if(!candidate){
-            res.status(400).json({message: "Такой пользователь не существует"})
+            isLog = false;
         }
         const isMatch = await bcrypt.compare(password, candidate.password);
         if(!isMatch){
-            return res.status(400).json({message: 'Неверный пароль'})
+            isLog = false;
         } 
-        res.status(400).json({message: 'Такой пользователь существует'});
+        if(!isLog)
+            return res.status(400).json({message: 'Неверный логин/пароль'})
+
+        res.status(200).json({message: 'Вы удачно вошли в аккаунт', user: candidate});
     } catch(e){
         res.status(400).json({message: 'Что-то пошло не так'});
     }
@@ -55,7 +59,7 @@ router.post(
         if(!errors.isEmpty()){
             return res.status(400).json({
                 errors: errors.array(),
-                message: 'Некорректные данные при регистрации12'
+                message: 'Некорректные данные при регистрации'
             })
         }
         const {email, password} = req.body;
