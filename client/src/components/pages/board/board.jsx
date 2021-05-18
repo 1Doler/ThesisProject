@@ -16,7 +16,8 @@ export default class Board extends Component{
         const localStorageRef = localStorage.getItem('table')
         this.state={
             table_data: props.data ? props.data : JSON.parse(localStorageRef),
-            active_modal: false
+            active_modal: false,
+            active_modalTask: false
         }
     }
    
@@ -47,7 +48,10 @@ export default class Board extends Component{
                         <b>{item.nameTable}</b>
                         <div style={{display: 'flex'}}>
                             <div className={classes.board__wrapper__item__btnAdd}>
-                                <i className="far fa-plus-square" style={{display: 'inline-block',textAlign:'right', marginRight: '5px'}}></i>
+                                <i className="far fa-plus-square" 
+                                    style={{display: 'inline-block',textAlign:'right', marginRight: '5px'}}
+                                    onClick={()=>this.setState({active_modalTask: true})}
+                                />
                             </div>
                             <div className={classes.board__wrapper__item__btnClose} onClick={()=>{this.delTable(item._id)}}>
                                 <i className={"far fa-window-close"}></i>
@@ -150,7 +154,7 @@ export default class Board extends Component{
             })
             visuble = this.mapTable(filter_data).length ? this.mapTable(filter_data) : <AddTaskList board_id={board_id} addTable={this.addTable} addTaskList={addTaskList}/>;
         }
-        
+        const activeStyle = this.state.active_modalTask ? {display: 'flex'}:{display: 'none'};
         return(
             <div className={classes.board}>
                 <Modal 
@@ -160,7 +164,7 @@ export default class Board extends Component{
                     addTable={this.addTable}
                     board_id={board_id}
                 />
-                <div className={classes.addTask}>
+                <div className={classes.addTask} style={activeStyle}>
                     <div className={classes.addTask__content}>
                         <h3>Create Task</h3>
                         <div className={classes.addTask__content__item}>
@@ -181,6 +185,18 @@ export default class Board extends Component{
                             </div>
                             <input type='text'/>
                         </div>
+                        <div 
+                            className={classes.addTask__content__buttonAdd}
+                            onClick={()=>console.log(this.state.active_modalTask)}
+                        >
+                            ADD
+                        </div>
+                        <div 
+                            className={classes.addTask__content__buttonCancel}
+                            onClick={()=>this.setState({active_modalTask: false})}
+                        >
+                            CANCEL
+                        </div>
                     </div>
                 </div>
                 <Nav />
@@ -188,6 +204,7 @@ export default class Board extends Component{
                     <h2 className={classes.title}>
                         Page Board
                     </h2>
+                    <Link to='/users'>USERS</Link>
                     <button className={classes.board__buttonAddTaskList} onClick={()=>{this.setState({active_modal: true})}}>Add Task List</button>
                     <div className={classes.board__wrapper}>
                         {visuble}

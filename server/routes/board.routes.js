@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 
 const Board = require('../models/Board')
 const Table = require('../models/Table')
-
+const User = require('../models/User')
 const router = Router()
 
 router.post('/pb',async (req,res)=>{
@@ -50,6 +50,18 @@ router.get('/table', async (req, res)=>{
         res.json(alldata);
     }catch(e){
         res.status(400).json({message: 'Ошибочка в TASK'})
+    }
+})
+router.post('/getexecutor', async(req,res)=>{
+    try{
+        const data = req.body;
+        const {executors} = data;
+        const users = await User.find({
+            '_id': {$in: executors}
+        }); 
+        res.json(users);
+    }catch(e){
+        res.status(400).json({message: 'Ошибочка'})
     }
 })
 module.exports = router

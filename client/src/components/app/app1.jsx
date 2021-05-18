@@ -7,13 +7,7 @@ import Projects from '../pages/projects/projects'
 import Board from '../pages/board/board'
 import Task from '../pages/task/task'
 import Main from '../pages/main/main'
-
-
-//ELLENLINE
-import News from '../Ellenline/news/News'
-import Footer from '../Ellenline/footer/Footer'
-import Spec from '../Ellenline/specOffers/SpecOffers'
-///
+import Users from '../pages/users/users'
 
 import classes from './app.module.sass'
 const App = () =>{
@@ -23,9 +17,7 @@ const App = () =>{
     const [table, setTable] = useState(null);
     const [tableId, setTableId] = useState(null);
     const [userId, setUserId] = useState(null)
-
-
-     
+    const [executor, setExecutor] = useState(null)
     
     useEffect(async () => {
         async function fetchData(){
@@ -85,7 +77,7 @@ const App = () =>{
             const res = await request('/api/auth/register', 'POST', {email, password})
             console.log(res)
         }catch(e){
-            console.log('Error app');
+            alert(e)
         }
     }
     const addTaskList = async (board_id, nameTaskList) =>{
@@ -123,13 +115,21 @@ const App = () =>{
             console.log('ERROR')
         }
     }
-    
     const deleteTaskList = async (newArr, id) =>{
         try{
             const a = await request('/api/auth/deletetasklist', 'POST', {id})
             setTable(newArr);
         }catch(e){
             console.log('ERROR DelteTaskList');
+        }
+    }
+    
+    const getExecutor = async (executors) =>{
+        try{
+            const res = await request('/api/auth/getexecutor', 'POST', {executors});
+            setExecutor(res);
+        }catch(e){
+            console.log('ERROR getExecutor');
         }
     }
 
@@ -142,12 +142,6 @@ const App = () =>{
                         logIn={logIn}
                         reg={reg}
                     />
-                </Route>
-                <Route path='/elen' exact>
-                
-                    <Spec />
-                    <News />
-                    <Footer />
                 </Route>
                 <Route path='/board/' exact>
                     <>
@@ -172,6 +166,14 @@ const App = () =>{
                         />
                     }
                 }/>
+                <Route path='/users' exact>
+                    <Users 
+                        boardData={boardData}
+                        boardId={boardId}
+                        getExecutor={getExecutor}
+                        executor={executor}
+                    />
+                </Route>
                 <Route path='/task/:id' render={
                     ({match}) => {
                         const {id} = match.params;

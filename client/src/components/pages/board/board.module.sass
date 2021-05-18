@@ -19,6 +19,68 @@ $bcg: #F5F5F5
 .board
     display: flex
     background-color: $bcg
+    .addTask
+        height: 100vh
+        width: 100vw
+        background-color: rgba(0,0,0,0.4)
+        position: fixed
+        top: 0
+        left: 0
+        display: flex
+        justify-content: center
+        align-items: center
+        display: none
+        &__content
+            padding: 20px
+            border-radius: 5px
+            background-color: white
+            width: 300px
+            font-size: 20px
+            &__title
+                text-align: center
+            &__item
+                p
+                    font-size: 14px
+                    text-align: left
+                    margin: 5px 0
+                input
+                    font-size: 14px
+                    width: 100%
+                    margin-bottom: 12px
+                    height: 25px
+                    border-radius: 5px
+                    border: 2px solid #8d8d8d
+                    &:hover
+                        border: 2px solid #81c784
+                    &:focus
+                        border: 2px solid #81c784
+                        outline: 0
+                        outline-offset: 0
+            &__buttonAdd
+                font-size: 12px
+                margin-top: 15px
+                padding: 5px
+                color: white
+                background-color: #f6a5c0
+                border: 2px solid white
+                border-radius: 5px
+                text-align: center
+                &:hover
+                    background-color: #e92f70
+                    border: 2px solid white
+                    cursor: pointer
+            &__buttonCancel
+                font-size: 12px
+                padding: 5px
+                color: white
+                background-color: #a6d4fa
+                border: 2px solid white
+                border-radius: 5px
+                text-align: center
+                &:hover
+                    cursor: pointer
+                    background-color: #5ba9e9
+                    border: 2px solid white
     &__name
         width: 1140px
         margin: 0 auto
