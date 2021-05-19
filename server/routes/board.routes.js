@@ -55,11 +55,39 @@ router.get('/table', async (req, res)=>{
 router.post('/getexecutor', async(req,res)=>{
     try{
         const data = req.body;
-        const {executors} = data;
+        const {executorId} = data;
         const users = await User.find({
-            '_id': {$in: executors}
-        }); 
+            '_id': {$in: executorId}
+        }, {password: false}); 
         res.json(users);
+    }catch(e){
+        res.status(400).json({message: 'Ошибочка'})
+    }
+})
+router.post('/addexecutor', async(req,res)=>{
+    try{
+        const data = req.body;
+        const {email, role, boardId} = data;
+        const user = await User.findOne({
+            'email': email
+        });
+        if(!user)
+        {
+            return res.status(400).json({message: 'Такого пользователя не существует'});
+        }
+        
+        const result = await Board.updateOne(
+            {   
+                '_id': boardId
+            },
+            {'$push':{
+                executor:{
+                    $each: [ {'userId': user._id, 'role': role} ] 
+                }
+            }}
+        )
+        res.json(result);
+
     }catch(e){
         res.status(400).json({message: 'Ошибочка'})
     }

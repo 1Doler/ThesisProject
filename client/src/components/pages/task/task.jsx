@@ -34,9 +34,6 @@ export default class Task extends Component{
     
     componentDidMount () {
         this.getData();
-        /* if (this.multilineTextarea) {
-            this.multilineTextarea.style.height = 'auto';
-        } */
     }
     componentWillReceiveProps(nextProps) {
         if (this.props.taskId !== nextProps.taskId) 
@@ -53,7 +50,7 @@ export default class Task extends Component{
         })
         const task_data = filter2[0];
         const {textTask,_id, description, author,status, dueDate, startDate, createDate, priority,completionPercentage, performer} = task_data;
-        
+        ;
         const dif = dueDate && startDate ? moment(dueDate).diff(moment(startDate),'days') : '';
         this.setState({
             nameBoard: b[0].nameBoard,
@@ -99,7 +96,6 @@ export default class Task extends Component{
     render(){
         const {filt, text, description, author,status,performer,dueDate,startDate,priority, duration,completionPercentage,_id,nameBoard} = this.state;
         
-        
         const optionStatus = [
             <option value=""></option>,
             <option value="Ready">Ready</option>,
@@ -119,6 +115,16 @@ export default class Task extends Component{
             <option value="Low">Low</option>,
             <option value="Medium">Medium</option>,
         ];
+        let optionExec = [];
+        
+        const {executor} =this.props;
+        if(executor)
+        {
+            executor.map(item=>optionExec.push(<option value={item._id}>{item.firstName} {item.lastName}</option>))
+        }
+        
+     
+       
         const optionCP = [];
         for(let i=0; i<=100; i+=10){
             optionCP.push(<option value={i}>{i}</option>)
@@ -180,9 +186,10 @@ export default class Task extends Component{
                             <div className={classes.task__information__wrapper}>
                                 <div className={classes.left}>
                                     <div className={classes.task__information__wrapper__owner}>
-                                        <p>Owner</p> 
-                                        <select value={performer} onChange={(e)=>{this.setState({priority: e.target.value})}}>
-                                            <option value={performer}>{performer}</option>
+                                        <p>Executor</p> 
+                                        <select value={performer} onChange={(e)=>{this.setState({performer: e.target.value})}}>
+                                            <option value='none'>None</option>
+                                            {[...optionExec]}
                                         </select>
                                     </div>
                                     <div className={classes.task__information__wrapper__startDate}>

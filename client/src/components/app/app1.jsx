@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react'
-import { Route, BrowserRouter as Router, Link } from "react-router-dom"
+import { Route, BrowserRouter as Router } from "react-router-dom"
 import {useHttp} from '../hooks/http.hook'
 
 
@@ -50,6 +50,35 @@ const App = () =>{
         fetchData();
         
     },[])
+
+    useEffect(async () =>{
+        if(boardData){
+            const executorId = [];
+            const b = [];
+            console.log(boardData)
+            boardData.map(elem => {
+                if (elem._id === boardId)
+                {
+                    b.push(elem)
+                    elem.executor.map(item=>{
+                        executorId.push(item.userId);
+                    })
+                    
+                }
+            })
+            
+            const res = await request('/api/auth/getexecutor', 'POST', {executorId});
+            res.map(item=>{
+                b[0].executor.map(elem=>{
+                    if(elem.userId === item._id){
+                        item.role = elem.role;
+                    }
+                })
+            })
+            setExecutor(res);
+        }
+    },[boardId]);
+
     
     useEffect(()=>{
         if(userId!=null)
@@ -82,7 +111,7 @@ const App = () =>{
     }
     const addTaskList = async (board_id, nameTaskList) =>{
         try{
-            const resIns = await request('/api/auth/addtasklist', 'POST', {board_id, nameTaskList})
+            await request('/api/auth/addtasklist', 'POST', {board_id, nameTaskList})
             const data = await request('/api/auth/table', 'GET')
             setTable(data)
             
@@ -117,19 +146,19 @@ const App = () =>{
     }
     const deleteTaskList = async (newArr, id) =>{
         try{
-            const a = await request('/api/auth/deletetasklist', 'POST', {id})
+            await request('/api/auth/deletetasklist', 'POST', {id})
             setTable(newArr);
         }catch(e){
             console.log('ERROR DelteTaskList');
         }
     }
     
-    const getExecutor = async (executors) =>{
+    const addExecutor = async (executor) =>{
         try{
-            const res = await request('/api/auth/getexecutor', 'POST', {executors});
-            setExecutor(res);
+            const res = await request('/api/auth/addexecutor', 'POST', executor);
+            console.log(res);
         }catch(e){
-            console.log('ERROR getExecutor');
+            console.log('ERROR addExecutor');
         }
     }
 
@@ -170,14 +199,15 @@ const App = () =>{
                     <Users 
                         boardData={boardData}
                         boardId={boardId}
-                        getExecutor={getExecutor}
+                        addExecutor={addExecutor}
                         executor={executor}
-                    />
+                        />
                 </Route>
                 <Route path='/task/:id' render={
                     ({match}) => {
                         const {id} = match.params;
                         return <Task 
+                            executor={executor}
                             dataBoard={boardData}
                             data={table}
                             tableId={tableId} 

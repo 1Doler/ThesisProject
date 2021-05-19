@@ -146,7 +146,7 @@ export default class Board extends Component{
 
     render(){
         const {table_data} = this.state;
-        const {board_id,addTaskList,userId} = this.props;
+        const {board_id,addTaskList} = this.props;
         let visuble = <h1>NOT DATA</h1>;
         if(table_data){
             const filter_data = table_data.filter((elem)=>{
@@ -204,7 +204,7 @@ export default class Board extends Component{
                     <h2 className={classes.title}>
                         Page Board
                     </h2>
-                    <Link to='/users'>USERS</Link>
+                    <Link to='/users' className={classes.users}>USERS</Link>
                     <button className={classes.board__buttonAddTaskList} onClick={()=>{this.setState({active_modal: true})}}>Add Task List</button>
                     <div className={classes.board__wrapper}>
                         {visuble}
