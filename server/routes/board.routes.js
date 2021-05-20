@@ -68,6 +68,7 @@ router.post('/addexecutor', async(req,res)=>{
     try{
         const data = req.body;
         const {email, role, boardId} = data;
+        console.log(role)
         const user = await User.findOne({
             'email': email
         });

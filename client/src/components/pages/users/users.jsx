@@ -8,28 +8,32 @@ import classes from './users.module.sass'
 export default class Board extends Component{
     constructor(props){
         super(props);
+        this.props.getExecutor();
         this.state={
             active: false
         }
     }
     mapExecutor = () =>{
         const {executor} = this.props;
-        return executor.map(item=>{
-            const {firstName, lastName, email, role} = item;
-            return(
-                <div className={classes.users__wrapper__item}>
-                    <div className={classes.fullName}>
-                        {firstName} {lastName}
+        if(executor){
+
+            return executor.map(item=>{
+                const {firstName, lastName, email, role} = item;
+                return(
+                    <div className={classes.users__wrapper__item}>
+                        <div className={classes.fullName}>
+                            {firstName} {lastName}
+                        </div>
+                        <div className={classes.email}>
+                            {email}
+                        </div>
+                        <div className={classes.role}>
+                            {role}
+                        </div>
                     </div>
-                    <div className={classes.email}>
-                        {email}
-                    </div>
-                    <div className={classes.role}>
-                        {role}
-                    </div>
-                </div>
-            )
-        })
+                )
+            })
+        }
     }
     render(){
         const {addExecutor,boardId} = this.props;
@@ -46,6 +50,7 @@ export default class Board extends Component{
                         close={()=>this.setState({active: false})}
                         addExecutor={addExecutor}
                         boardId={boardId}
+                        getExecutor={this.props.getExecutor}
                     />
                     <div className={classes.users__wrapper}>
                         {this.mapExecutor()}

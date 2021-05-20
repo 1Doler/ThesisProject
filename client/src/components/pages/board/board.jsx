@@ -70,6 +70,14 @@ export default class Board extends Component{
         if(data.length){
             return data.map(item =>{
                 const link_task = '/task/'+ item._id;
+                
+                const colorDate = {color: '#99cc60'};
+                if(item.dueDate){
+                    if(moment(item.dueDate).isBefore(moment()))
+                    {
+                        colorDate.color = 'red';
+                    }
+                }
                 // COLOR PRIORITY 
                 let color_priority={};
                 switch(item.priority){
@@ -96,11 +104,9 @@ export default class Board extends Component{
                         color_status={backgroundColor: '#99cc60'};
                         break;
                 }
-                
+
                 return(
-                    
                     <div key={item._id} className={classes.board__wrapper__item__task}>
-                        
                         <Link onClick={()=>this.props.getTableId(id)} to={link_task} style={{textDecoration: 'none', color: 'black'}}>
                             <div className={classes.board__wrapper__item__task__textTask}>
                                 {item.textTask}
@@ -123,7 +129,7 @@ export default class Board extends Component{
                             </div>
                         </div>
                         
-                        <div className={classes.board__wrapper__item__task__dueDate}>
+                        <div className={classes.board__wrapper__item__task__dueDate} style={colorDate}>
                             {item.dueDate ? moment(item.dueDate).format('DD.MM.YYYY') : null}
                         </div> 
                     </div>

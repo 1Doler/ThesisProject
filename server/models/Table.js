@@ -8,7 +8,7 @@ const Table = new Schema({
         textTask: {type: String},
         description: {type: String},
         author: {type: String},
-        performer: {type: Types.ObjectId, ref: 'Users'},
+        performer: {type: Schema.Types.Mixed},
         tag: {type: [String]},
         status: {type: String},
         priority: {type: String},

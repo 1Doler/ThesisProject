@@ -51,7 +51,7 @@ const App = () =>{
         
     },[])
 
-    useEffect(async () =>{
+    const getExecutor = async () =>{
         if(boardData){
             const executorId = [];
             const b = [];
@@ -77,7 +77,7 @@ const App = () =>{
             })
             setExecutor(res);
         }
-    },[boardId]);
+    };
 
     
     useEffect(()=>{
@@ -200,6 +200,7 @@ const App = () =>{
                         boardData={boardData}
                         boardId={boardId}
                         addExecutor={addExecutor}
+                        getExecutor={getExecutor}
                         executor={executor}
                         />
                 </Route>

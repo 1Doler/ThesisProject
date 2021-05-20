@@ -32,6 +32,8 @@ router.post('/updatetask', async (req, res)=>{
     try{
         const data = req.body;
         const {_id, tableId, description, text, status, performer, startDate, priority, duration, completionPercentage, dueDate} = data;
+        const fd = await Table.find({'_id': tableId,
+        'task._id': _id,});
         const result = await Table.update(
             {   
                 '_id': tableId,
