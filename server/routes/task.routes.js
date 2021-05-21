@@ -32,7 +32,7 @@ router.post('/updatetask', async (req, res)=>{
     try{
         const data = req.body;
         const {_id, tableId, description, text, status, performer, startDate, priority, duration, completionPercentage, dueDate} = data;
-        const fd = await Table.find({'_id': tableId,
+        await Table.find({'_id': tableId,
         'task._id': _id,});
         const result = await Table.update(
             {   
@@ -50,9 +50,60 @@ router.post('/updatetask', async (req, res)=>{
                 'task.$.priority': priority,
                 'task.$.duration': duration,
                 'task.$.completionPercentage': completionPercentage
-            }, function(error, success) {}}    
+            }}    
         )
         res.status(200).json({message: result});
+    }catch(e){
+        res.status(400).json({message: 'Ошибочка'})
+    }
+})
+
+/* router.post('/addtask', async (req, res)=>{
+    try{
+        const data = req.body;
+        const {addText, addDescr, addExec, addPriority, userId} = data;
+        const result = await Table.updateOne(
+            {   
+                '_id': _id
+            },
+            {'$push':{
+                task:{
+                    $each: [ {
+                        'textTask': addText, 
+                        'description': addDescr,
+                        'author': userId,
+                        'performer': addExec,
+                        'priority': addPriority
+                    } ] 
+                }
+            }}
+        )
+    }catch(e){
+        res.status(400).json({message: 'Ошибочка'})
+    }
+}) */
+router.post('/addtask', async (req, res)=>{
+    try{
+        const data = req.body;
+        
+        const {addText, addDescr, addExec, addPriority, userId, tableId} = data;
+        const result = await Table.updateOne(
+            {   
+                '_id': tableId
+            },
+            {'$push':{
+                task:{
+                    $each: [ {
+                        'textTask': addText, 
+                        'description': addDescr,
+                        'author': userId,
+                        'performer': addExec,
+                        'priority': addPriority
+                    } ] 
+                }
+            }}
+        )
+        res.status(200).json({message: 'Good'});
     }catch(e){
         res.status(400).json({message: 'Ошибочка'})
     }

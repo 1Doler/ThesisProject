@@ -8,9 +8,8 @@ import classes from './users.module.sass'
 export default class Board extends Component{
     constructor(props){
         super(props);
-        this.props.getExecutor();
         this.state={
-            active: false
+            active: false,
         }
     }
     mapExecutor = () =>{
@@ -29,6 +28,9 @@ export default class Board extends Component{
                         </div>
                         <div className={classes.role}>
                             {role}
+                        </div>
+                        <div className={classes.btnDelete}>
+                            Delete
                         </div>
                     </div>
                 )

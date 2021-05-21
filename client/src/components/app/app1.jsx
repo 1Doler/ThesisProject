@@ -18,44 +18,40 @@ const App = () =>{
     const [tableId, setTableId] = useState(null);
     const [userId, setUserId] = useState(null)
     const [executor, setExecutor] = useState(null)
-    
-    useEffect(async () => {
-        async function fetchData(){
-            try{
-                const localStorageRef = localStorage.getItem('userId')
-                const id = JSON.parse(localStorageRef);
-                const data = await request('/api/auth/boarddata1', 'POST', {id});
-                setBoardData(data);
-                
-            }catch(e){
-                alert('Инет пропал')
-            }
-        }
-        fetchData();
-    }, []);
+    const [uf, setUf] = useState(false)
 
+    const fetchData1 = async () =>{
+        try{
+            const localStorageRef = localStorage.getItem('userId')
+            const id = JSON.parse(localStorageRef);
+            const data = await request('/api/auth/boarddata1', 'POST', {id});
+            setBoardData(data);
+        }catch(e){
+            alert('Инет пропал')
+        }
+    }
+    useEffect(async () => {
+        fetchData1();
+    }, []);
     useEffect(async () =>{
         async function fetchData(){
             try{
-                try{
-                    const data = await request('/api/auth/table', 'GET');
-                    setTable(data)
-                }catch(e){
-                    alert('ERROR IN API TASK')
-                }
+                const data = await request('/api/auth/table', 'GET');
+                setTable(data)
             }catch(e){
-                alert('EEE')
+                alert('ERROR IN API TASK')
             }
         }
         fetchData();
-        
-    },[])
-
+    },[uf])
+    useEffect(()=>{
+        getExecutor();
+    },[boardId])
     const getExecutor = async () =>{
+        console.log(boardData)
         if(boardData){
             const executorId = [];
             const b = [];
-            console.log(boardData)
             boardData.map(elem => {
                 if (elem._id === boardId)
                 {
@@ -125,7 +121,8 @@ const App = () =>{
             const update = await request('/api/auth/updatetask', 'POST', state);
             console.log(update);
             const data1 = await request('/api/auth/table', 'GET');
-            setTable(data1)
+            await setTable(data1)
+            setUf(!uf)
         }catch(e){
             alert('Error app')
         }
@@ -153,13 +150,25 @@ const App = () =>{
         }
     }
     
-    const addExecutor = async (executor) =>{
+    const addExecutor = async (executors) =>{
         try{
-            const res = await request('/api/auth/addexecutor', 'POST', executor);
-            console.log(res);
+            const res = await request('/api/auth/addexecutor', 'POST', executors);
+            console.log(res)
+            const index = boardData.findIndex(elem=>elem._id===boardId)
+            const old = boardData[index];
+            const newItem = {userId: res.userId, role: executors.role};
+            old.executor.push(newItem);
+            console.log(old)
+            const newArr = [...boardData.slice(0,index),old,...boardData.slice(index+1)]
+            setBoardData(newArr)
         }catch(e){
-            console.log('ERROR addExecutor');
+            alert('Не удалось добавить исполнителя')
         }
+    }
+
+    const addTask = async (info) =>{
+        const res = await request('/api/auth/addtask', 'POST', info);
+        console.log(res);
     }
 
     const localStorageRef = localStorage.getItem('userId')
@@ -188,10 +197,12 @@ const App = () =>{
                         return <Board 
                             data={table} 
                             board_id={id}
+                            executor={executor}
                             getTableId={(id)=>setTableId(id)}
                             addTaskList={addTaskList}
                             deleteTaskList={deleteTaskList}
                             userId={JSON.parse(localStorageRef)}
+                            addTask={addTask}
                         />
                     }
                 }/>

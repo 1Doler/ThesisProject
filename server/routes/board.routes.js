@@ -68,7 +68,6 @@ router.post('/addexecutor', async(req,res)=>{
     try{
         const data = req.body;
         const {email, role, boardId} = data;
-        console.log(role)
         const user = await User.findOne({
             'email': email
         });
@@ -87,7 +86,7 @@ router.post('/addexecutor', async(req,res)=>{
                 }
             }}
         )
-        res.json(result);
+        res.status(200).json({userId: user._id});
 
     }catch(e){
         res.status(400).json({message: 'Ошибочка'})

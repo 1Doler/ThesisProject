@@ -10,10 +10,10 @@ const Table = new Schema({
         author: {type: String},
         performer: {type: Schema.Types.Mixed},
         tag: {type: [String]},
-        status: {type: String},
+        status: {type: String, default: 'Status'},
         priority: {type: String},
         completionPercentage: {type: Number, min: 0, max: 100, default: 0},
-        createData: {type: Date},
+        createData: {type: Date, default: Date.now},
         startDate: {type: Date},
         dueDate: {type: Date},
     }]

@@ -17,7 +17,12 @@ export default class Board extends Component{
         this.state={
             table_data: props.data ? props.data : JSON.parse(localStorageRef),
             active_modal: false,
-            active_modalTask: false
+            active_modalTask: false,
+            addText: '',
+            addDescr: '',
+            addExec: '',
+            addPriority: '',
+            tableId: ''
         }
     }
    
@@ -50,7 +55,7 @@ export default class Board extends Component{
                             <div className={classes.board__wrapper__item__btnAdd}>
                                 <i className="far fa-plus-square" 
                                     style={{display: 'inline-block',textAlign:'right', marginRight: '5px'}}
-                                    onClick={()=>this.setState({active_modalTask: true})}
+                                    onClick={()=>this.setState({active_modalTask: true, tableId: item._id})}
                                 />
                             </div>
                             <div className={classes.board__wrapper__item__btnClose} onClick={()=>{this.delTable(item._id)}}>
@@ -66,30 +71,47 @@ export default class Board extends Component{
             )
         })
     }
+    onChange = (e) =>{
+        const name = e.target.name;
+        this.setState({[name]: e.target.value})
+    }
     mapTask = (data,id) =>{
         if(data.length){
             return data.map(item =>{
+
                 const link_task = '/task/'+ item._id;
                 
                 const colorDate = {color: '#99cc60'};
+
                 if(item.dueDate){
                     if(moment(item.dueDate).isBefore(moment()))
                     {
                         colorDate.color = 'red';
                     }
                 }
+                let exec;
+                if(this.props.executor){
+
+                    exec = this.props.executor.map((elem)=>{
+                        if(elem._id===item.performer)
+                        return ' ' + elem.firstName + ' ' + elem.lastName
+                    })
+                }
                 // COLOR PRIORITY 
                 let color_priority={};
-                switch(item.priority){
+                switch(item.priority){ 
                     case ('Hight'):
                         color_priority={color: 'red', fontSize: '15px',marginRight: '10px'};
                         break;
                     case ('Medium'):
                         color_priority={color: 'orange', fontSize: '15px',marginRight: '10px'};
                         break;
-                    default:
+                    case ('Low'):
                         color_priority={color: 'green', fontSize: '15px',marginRight: '10px'};
                         break;
+                    default:
+                        color_priority={color: 'white', fontSize: '15px',marginRight: '10px'};
+                        break
                 }
                 // COLOR STATUS 
                 let color_status={};
@@ -97,7 +119,7 @@ export default class Board extends Component{
                     case ('Ready'):
                         color_status={backgroundColor: '#64b5f6'};
                         break;
-                    case ('in progress'):
+                    case ('In Progress'):
                         color_status={backgroundColor: '#ffd54f'};
                         break;
                     default:
@@ -124,8 +146,8 @@ export default class Board extends Component{
                                 {item.tag.length?<i className="fas fa-bookmark"></i> : null}
                             </div>
                             <div className={classes.board__wrapper__item__task__footer__author}>
-                                <i className="fas fa-grin-wink" style={{color: '#99cc60'}}></i> 
-                                {item.author}
+                                <i className="fas fa-grin-wink" style={{color: '#99cc60'}}></i>  
+                                {exec}
                             </div>
                         </div>
                         
@@ -151,8 +173,15 @@ export default class Board extends Component{
     
 
     render(){
-        const {table_data} = this.state;
-        const {board_id,addTaskList} = this.props;
+        const {table_data, addText, addDescr, addExec,addPriority, tableId} = this.state;
+        const {board_id,addTaskList,userId} = this.props;
+
+        let optionExec = [];
+        const {executor} =this.props;
+        if(executor)
+        {
+            executor.map(item=>optionExec.push(<option value={item._id}>{item.firstName} {item.lastName}</option>))
+        }
         let visuble = <h1>NOT DATA</h1>;
         if(table_data){
             const filter_data = table_data.filter((elem)=>{
@@ -177,23 +206,59 @@ export default class Board extends Component{
                             <div className={classes.addTask__content__item__text}>
                                 Name Task: 
                             </div>
-                            <input type='text'/>
+                            <input 
+                                className={classes.inp} 
+                                type='text'
+                                name='addText' 
+                                value={addText}
+                                onChange={(e)=>this.onChange(e)}
+                            />
                         </div>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Chose: 
+                                Description: 
                             </div>
-                            <input type='text'/>
+                            <input 
+                                className={classes.inp} 
+                                type='text'
+                                name='addDescr' 
+                                value={addDescr}
+                                onChange={(e)=>this.onChange(e)}
+                            />
                         </div>
                         <div className={classes.addTask__content__item}>
-                        <div className={classes.addTask__content__item__text}>
-                                Name Task: 
+                            <div className={classes.addTask__content__item__text}>
+                                Select executor: 
                             </div>
-                            <input type='text'/>
+                            <select 
+                                className={classes.inp}
+                                name='addExec' 
+                                value={addExec}
+                                onChange={(e)=>this.onChange(e)}
+                            >
+                                <option value='None'>None</option>
+                                {[...optionExec]}
+                            </select>
+                        </div>
+                        <div className={classes.addTask__content__item}>
+                            <div className={classes.addTask__content__item__text}>
+                                Select priority: 
+                            </div>
+                            <select 
+                                className={classes.inp}
+                                name='addPriority' 
+                                value={addPriority}
+                                onChange={(e)=>this.onChange(e)}
+                            >
+                                <option value='None'>None</option>
+                                <option value='Low'>Low</option>
+                                <option value='Medium'>Medium</option>
+                                <option value='Hight'>Hight</option>
+                            </select>
                         </div>
                         <div 
                             className={classes.addTask__content__buttonAdd}
-                            onClick={()=>console.log(this.state.active_modalTask)}
+                            onClick={()=>this.props.addTask({addText,addDescr,addExec, addPriority, userId, tableId})}
                         >
                             ADD
                         </div>
