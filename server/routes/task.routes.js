@@ -103,7 +103,7 @@ router.post('/addtask', async (req, res)=>{
                 }
             }}
         )
-        res.status(200).json({message: 'Good'});
+        res.status(200).json({message: result});
     }catch(e){
         res.status(400).json({message: 'Ошибочка'})
     }

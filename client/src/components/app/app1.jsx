@@ -36,8 +36,11 @@ const App = () =>{
     useEffect(async () =>{
         async function fetchData(){
             try{
+                console.log('dsa')
                 const data = await request('/api/auth/table', 'GET');
+                localStorage.setItem('table', JSON.stringify(data));
                 setTable(data)
+                console.log('dasdasd',JSON.parse(localStorage.getItem('table')))
             }catch(e){
                 alert('ERROR IN API TASK')
             }
@@ -48,7 +51,6 @@ const App = () =>{
         getExecutor();
     },[boardId])
     const getExecutor = async () =>{
-        console.log(boardData)
         if(boardData){
             const executorId = [];
             const b = [];
@@ -71,6 +73,7 @@ const App = () =>{
                     }
                 })
             })
+            localStorage.setItem('executor', JSON.stringify(res));
             setExecutor(res);
         }
     };
@@ -107,10 +110,8 @@ const App = () =>{
     }
     const addTaskList = async (board_id, nameTaskList) =>{
         try{
-            await request('/api/auth/addtasklist', 'POST', {board_id, nameTaskList})
-            const data = await request('/api/auth/table', 'GET')
-            setTable(data)
-            
+            await request('/api/auth/addtasklist', 'POST', {board_id, nameTaskList});
+            window.location.reload();
         }catch(e){
             console.log('Error app')
         }
@@ -118,11 +119,10 @@ const App = () =>{
     const updateTable = async (state) =>{
         
         try{
-            const update = await request('/api/auth/updatetask', 'POST', state);
-            console.log(update);
+            await request('/api/auth/updatetask', 'POST', state);
             const data1 = await request('/api/auth/table', 'GET');
             await setTable(data1)
-            setUf(!uf)
+            window.location.assign(`/board/${boardId}`);
         }catch(e){
             alert('Error app')
         }
@@ -137,6 +137,7 @@ const App = () =>{
             const newArr = [...boardData.slice(0,index),newItem,...boardData.slice(index+1)];     
             await request('/api/auth/ontoggleimportant', 'POST', newItem)
             setBoardData(newArr);
+
         }catch(e){
             console.log('ERROR')
         }
@@ -144,7 +145,9 @@ const App = () =>{
     const deleteTaskList = async (newArr, id) =>{
         try{
             await request('/api/auth/deletetasklist', 'POST', {id})
+            localStorage.setItem('table', JSON.stringify(newArr));
             setTable(newArr);
+            window.location.reload();
         }catch(e){
             console.log('ERROR DelteTaskList');
         }
@@ -161,6 +164,7 @@ const App = () =>{
             console.log(old)
             const newArr = [...boardData.slice(0,index),old,...boardData.slice(index+1)]
             setBoardData(newArr)
+            window.location.reload();
         }catch(e){
             alert('Не удалось добавить исполнителя')
         }
@@ -169,9 +173,10 @@ const App = () =>{
     const addTask = async (info) =>{
         const res = await request('/api/auth/addtask', 'POST', info);
         console.log(res);
+        
     }
 
-    const localStorageRef = localStorage.getItem('userId')
+    const localStorageId = localStorage.getItem('userId')
     return(
         <Router>
             <div className={classes.app}>
@@ -201,7 +206,7 @@ const App = () =>{
                             getTableId={(id)=>setTableId(id)}
                             addTaskList={addTaskList}
                             deleteTaskList={deleteTaskList}
-                            userId={JSON.parse(localStorageRef)}
+                            userId={JSON.parse(localStorageId)}
                             addTask={addTask}
                         />
                     }

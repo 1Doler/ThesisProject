@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 
 export default class Task extends Component{
     constructor(props){
+        
         super(props);
         this.state = {
             filt: null,
@@ -118,9 +119,10 @@ export default class Task extends Component{
         let optionExec = [];
         
         const {executor} =this.props;
-        if(executor)
+        const localStorageExec = localStorage.getItem('executor');
+        if(JSON.parse(localStorageExec))
         {
-            executor.map(item=>optionExec.push(<option value={item._id}>{item.firstName} {item.lastName}</option>))
+            JSON.parse(localStorageExec).map(item=>optionExec.push(<option value={item._id}>{item.firstName} {item.lastName}</option>))
         }
         
      
@@ -130,7 +132,7 @@ export default class Task extends Component{
             optionCP.push(<option value={i}>{i}</option>)
         }
         const {tableId} = this.props;
-        
+      
         return(
             
             <div key={tableId} className={classes.taskPage}>

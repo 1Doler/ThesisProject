@@ -13,10 +13,10 @@ export default class Board extends Component{
         }
     }
     mapExecutor = () =>{
-        const {executor} = this.props;
-        if(executor){
+        const localStorageExec = JSON.parse(localStorage.getItem('executor'));
+        if(localStorageExec){
 
-            return executor.map(item=>{
+            return localStorageExec.map(item=>{
                 const {firstName, lastName, email, role} = item;
                 return(
                     <div className={classes.users__wrapper__item}>

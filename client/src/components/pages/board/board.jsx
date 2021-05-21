@@ -15,7 +15,7 @@ export default class Board extends Component{
         
         const localStorageRef = localStorage.getItem('table')
         this.state={
-            table_data: props.data ? props.data : JSON.parse(localStorageRef),
+            table_data: JSON.parse(localStorageRef),
             active_modal: false,
             active_modalTask: false,
             addText: '',
@@ -25,11 +25,7 @@ export default class Board extends Component{
             tableId: ''
         }
     }
-   
-    componentDidUpdate() {
-        const {data} = this.props;
-        localStorage.setItem('table', JSON.stringify(data));
-    }
+    
 
     addTable = (boardId, nameTable) =>{
         const newItem = {boardId,nameTable,task:[]}
@@ -75,6 +71,17 @@ export default class Board extends Component{
         const name = e.target.name;
         this.setState({[name]: e.target.value})
     }
+    onAddTask = ()=>{
+        const { addText, addDescr, addExec,addPriority, tableId} = this.state;
+        const {userId} = this.props;
+        if(addText)
+        {
+            this.props.addTask({addText,addDescr,addExec, addPriority, userId, tableId});
+            this.setState({active_modalTask: false})
+        }
+        else
+            alert('Заполните поле "Name Task"')
+    }
     mapTask = (data,id) =>{
         if(data.length){
             return data.map(item =>{
@@ -90,12 +97,14 @@ export default class Board extends Component{
                     }
                 }
                 let exec;
-                if(this.props.executor){
-
-                    exec = this.props.executor.map((elem)=>{
+                const localStorageExec = localStorage.getItem('executor')
+                if( JSON.parse(localStorageExec))
+                {
+                    exec = JSON.parse(localStorageExec).map((elem)=>{
                         if(elem._id===item.performer)
                         return ' ' + elem.firstName + ' ' + elem.lastName
                     })
+
                 }
                 // COLOR PRIORITY 
                 let color_priority={};
@@ -173,18 +182,21 @@ export default class Board extends Component{
     
 
     render(){
-        const {table_data, addText, addDescr, addExec,addPriority, tableId} = this.state;
+        const { addText, addDescr, addExec,addPriority} = this.state;
         const {board_id,addTaskList,userId} = this.props;
-
+        const localStorageExec = localStorage.getItem('executor');
+        const localStorageRef = localStorage.getItem('table')
         let optionExec = [];
         const {executor} =this.props;
-        if(executor)
+        if(JSON.parse(localStorageExec))
         {
-            executor.map(item=>optionExec.push(<option value={item._id}>{item.firstName} {item.lastName}</option>))
+            JSON.parse(localStorageExec).map(item=>optionExec.push(<option value={item._id}>{item.firstName} {item.lastName}</option>))
         }
         let visuble = <h1>NOT DATA</h1>;
-        if(table_data){
-            const filter_data = table_data.filter((elem)=>{
+        const pJs = JSON.parse(localStorageRef);
+        console.log('DDDD',pJs)
+        if(this.state.table_data){
+            const filter_data = this.state.table_data.filter((elem)=>{
                 return elem.boardId === board_id
             })
             visuble = this.mapTable(filter_data).length ? this.mapTable(filter_data) : <AddTaskList board_id={board_id} addTable={this.addTable} addTaskList={addTaskList}/>;
@@ -204,7 +216,7 @@ export default class Board extends Component{
                         <h3>Create Task</h3>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Name Task: 
+                                Name Task:
                             </div>
                             <input 
                                 className={classes.inp} 
@@ -258,7 +270,7 @@ export default class Board extends Component{
                         </div>
                         <div 
                             className={classes.addTask__content__buttonAdd}
-                            onClick={()=>this.props.addTask({addText,addDescr,addExec, addPriority, userId, tableId})}
+                            onClick={()=>this.onAddTask()}
                         >
                             ADD
                         </div>
