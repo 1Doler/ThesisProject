@@ -1,5 +1,18 @@
 $bcg: #F5F5F5
 $iconcolor: #526400
+$bgcolor: #99cc60
+@mixin btn()
+    font-size: 1em
+    padding: 5px
+    color: #99cc60
+    background-color: white
+    border: 3px solid $bgcolor
+    border-radius: 5px
+    &:hover
+        transform: scale(1.1)
+        border: 3px solid #6ea330
+        cursor: pointer
+
 .sectionProjects
     display: flex
     justify-content: left
@@ -8,3 +21,69 @@ $iconcolor: #526400
         width: 100%
         background-color: $bcg
         padding: 20px
+        .board
+            &__btn
+                margin-bottom: 20px 
+                @include btn
+        .modal
+            height: 100vh
+            width: 100vw
+            background-color: rgba(0,0,0,0.4)
+            position: fixed
+            top: 0
+            left: 0
+            display: flex
+            justify-content: center
+            align-items: center
+            .addTask__content
+                padding: 20px
+                border-radius: 5px
+                background-color: white
+                width: 300px
+                font-size: 20px
+                &__title
+                    text-align: center
+                &__item
+                    p
+                        font-size: 14px
+                        text-align: left
+                        margin: 5px 0
+                    .inp
+                        font-size: 14px
+                        width: 100%
+                        margin-bottom: 12px
+                        height: 25px
+                        border-radius: 5px
+                        border: 2px solid #8d8d8d
+                        &:hover
+                            border: 2px solid #81c784
+                        &:focus
+                            border: 2px solid #81c784
+                            outline: 0
+                            outline-offset: 0
+                &__buttonAdd
+                    font-size: 12px
+                    margin-top: 15px
+                    padding: 5px
+                    color: white
+                    background-color: #f6a5c0
+                    border: 2px solid white
+                    border-radius: 5px
+                    text-align: center
+                    &:hover
+                        background-color: #e92f70
+                        border: 2px solid white
+                        cursor: pointer
+                &__buttonCancel
+                    font-size: 12px
+                    padding: 5px
+                    color: white
+                    background-color: #a6d4fa
+                    border: 2px solid white
+                    border-radius: 5px
+                    text-align: center
+                    &:hover
+                        cursor: pointer
+                        background-color: #5ba9e9
+                        border: 2px solid white
+                    

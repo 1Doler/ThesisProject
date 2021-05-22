@@ -9,21 +9,22 @@ const Table = require('../models/Table')
 const User = require('../models/User')
 const router = Router()
 
-router.post('/pb',async (req,res)=>{
-    try{
-        const {data} = req.body;
-        const newdata = new Board(data);
-        const re = await newdata.save();
-        res.status(400).json({message: re})
-    }catch(e){
-        res.status(400).json({message: 'Ашибка'});
-    }
-})
 router.post('/boarddata1', async (req, res) =>{
     try{
         
-        const alldata = await Board.find({userId: req.body.id}); 
+        const alldata = await Board.find({$or: [{userId: req.body.id}, {'executor.userId': req.body.id}]});   
         res.json(alldata);
+    }catch(e) {
+        res.status(400).json({message: 'Что-то пошло не так'});
+    }
+})
+router.post('/addboard', async (req, res) =>{
+    try{
+        const {lsUserId, nameBoard, descr, status} = req.body;
+        const newItem = new Board({userId: lsUserId,nameBoard, description: descr,status}); 
+        await newItem.save();
+       
+        res.json('good');
     }catch(e) {
         res.status(400).json({message: 'Что-то пошло не так'});
     }

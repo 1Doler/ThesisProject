@@ -20,7 +20,7 @@ export default class BoardItem extends Component{
         const styleLink = {textDecoration: 'none',color: 'black'};
         if(data.length){
             return data.map(item=>{
-                const {nameBoard, description, author, favorite,_id} = item;
+                const {nameBoard, description, userId, status, favorite,_id} = item;
                 const link_board = '/board/'+ _id;
                 
                 const isFavorite = !favorite ? 
@@ -35,10 +35,13 @@ export default class BoardItem extends Component{
                             <Link to={link_board} style={styleLink}>{nameBoard}</Link>
                         </td>
                         <td className={classes.board_item__wrapper__author}>
-                            {author}
+                            {userId}
                         </td>
                         <td className={classes.board_item__wrapper__descr}>
                             {description}
+                        </td>
+                        <td className={classes.board_item__wrapper__descr}>
+                            {status}
                         </td>
                         <td className={classes.board_item__wrapper__btn}>
                             <i className="far fa-edit" style={styleIcon}></i>
@@ -62,6 +65,7 @@ export default class BoardItem extends Component{
                             <th>PROJECT NAME</th>
                             <th>OWNER</th>
                             <th>DESCRIPTION</th>
+                            <th>Status</th>
                             <th>BTN</th>
                         </tr>
                         {boards}

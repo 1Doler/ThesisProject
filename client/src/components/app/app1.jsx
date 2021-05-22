@@ -20,6 +20,7 @@ const App = () =>{
     const [executor, setExecutor] = useState(null)
     const [uf, setUf] = useState(false)
 
+    ////getBoardDate
     const fetchData1 = async () =>{
         try{
             const localStorageRef = localStorage.getItem('userId')
@@ -33,20 +34,21 @@ const App = () =>{
     useEffect(async () => {
         fetchData1();
     }, []);
+
+
     useEffect(async () =>{
-        async function fetchData(){
-            try{
-                console.log('dsa')
-                const data = await request('/api/auth/table', 'GET');
-                localStorage.setItem('table', JSON.stringify(data));
-                setTable(data)
-                console.log('dasdasd',JSON.parse(localStorage.getItem('table')))
-            }catch(e){
-                alert('ERROR IN API TASK')
-            }
+        try{
+            const data = await request('/api/auth/table', 'GET');
+            localStorage.setItem('table', JSON.stringify(data));
+            setTable(data)
         }
-        fetchData();
+        catch(e){
+            alert('ERROR IN API TASK')
+        }
+        
     },[uf])
+
+
     useEffect(()=>{
         getExecutor();
     },[boardId])
@@ -64,7 +66,6 @@ const App = () =>{
                     
                 }
             })
-            
             const res = await request('/api/auth/getexecutor', 'POST', {executorId});
             res.map(item=>{
                 b[0].executor.map(elem=>{
@@ -78,7 +79,6 @@ const App = () =>{
         }
     };
 
-    
     useEffect(()=>{
         if(userId!=null)
         {
@@ -86,6 +86,8 @@ const App = () =>{
             window.location.assign("/board");
         }
     },[userId]);
+
+    ///auth requiset
     const logIn = async (email, password) =>{
         try{
             const res = await request('/api/auth/login', 'POST', {email, password})
@@ -108,25 +110,19 @@ const App = () =>{
             alert(e)
         }
     }
-    const addTaskList = async (board_id, nameTaskList) =>{
+
+    
+    const addBoard = async (nameBoard, descr, status) =>{
         try{
-            await request('/api/auth/addtasklist', 'POST', {board_id, nameTaskList});
+            const lsUserId = JSON.parse(localStorage.getItem('userId'))
+            const a = await request('/api/auth/addboard', 'POST', {lsUserId, nameBoard, descr, status})
+            console.log('ljk;')
             window.location.reload();
         }catch(e){
-            console.log('Error app')
+            console.log("eerrror")
         }
     }
-    const updateTable = async (state) =>{
-        
-        try{
-            await request('/api/auth/updatetask', 'POST', state);
-            const data1 = await request('/api/auth/table', 'GET');
-            await setTable(data1)
-            window.location.assign(`/board/${boardId}`);
-        }catch(e){
-            alert('Error app')
-        }
-    }
+    
    
     const onToggleImportant = async (_id) =>{
         try{
@@ -142,17 +138,62 @@ const App = () =>{
             console.log('ERROR')
         }
     }
+
+
+    const addTaskList = async (board_id, nameTaskList) =>{
+        try{
+            await request('/api/auth/addtasklist', 'POST', {board_id, nameTaskList});
+            const data1 = await request('/api/auth/table', 'GET');
+            await setTable(data1)
+            localStorage.setItem('table', JSON.stringify(data1));
+            window.location.reload();
+            
+        }catch(e){
+            console.log('Error app')
+        }
+    }
     const deleteTaskList = async (newArr, id) =>{
         try{
             await request('/api/auth/deletetasklist', 'POST', {id})
-            localStorage.setItem('table', JSON.stringify(newArr));
             setTable(newArr);
+            const data1 = await request('/api/auth/table', 'GET');
+            await setTable(data1)
+            localStorage.setItem('table', JSON.stringify(data1));
             window.location.reload();
         }catch(e){
             console.log('ERROR DelteTaskList');
         }
     }
+    const updateTable = async (state) =>{
+        try{
+            await request('/api/auth/updatetask', 'POST', state);
+            const data1 = await request('/api/auth/table', 'GET');
+            await setTable(data1)
+            localStorage.setItem('table', JSON.stringify(data1));
+            window.location.assign(`/board/${boardId}`);
+        }catch(e){
+            alert('Error app')
+        }
+    }
+
+    const addTask = async (info) =>{
+        const res = await request('/api/auth/addtask', 'POST', info);
+        const data1 = await request('/api/auth/table', 'GET');
+        await setTable(data1)
+        localStorage.setItem('table', JSON.stringify(data1));
+        window.location.reload();
+        
+    }
+    const deleteTask = async (tableId, taskId) =>{
+        await request('/api/auth/deletetask', 'POST', {tableId,taskId});
+        const data1 = await request('/api/auth/table', 'GET');
+        await setTable(data1)
+        localStorage.setItem('table', JSON.stringify(data1));
+        window.location.reload();
+    }
     
+
+
     const addExecutor = async (executors) =>{
         try{
             const res = await request('/api/auth/addexecutor', 'POST', executors);
@@ -163,18 +204,48 @@ const App = () =>{
             old.executor.push(newItem);
             console.log(old)
             const newArr = [...boardData.slice(0,index),old,...boardData.slice(index+1)]
-            setBoardData(newArr)
+            setBoardData(newArr);
+            if(boardData){
+                const executorId = [];
+                const b = [];
+                boardData.map(elem => {
+                    if (elem._id === boardId)
+                    {
+                        b.push(elem)
+                        elem.executor.map(item=>{
+                            executorId.push(item.userId);
+                        })
+                        
+                    }
+                })
+                
+                const res1 = await request('/api/auth/getexecutor', 'POST', {executorId});
+                res1.map(item=>{
+                    b[0].executor.map(elem=>{
+                        if(elem.userId === item._id){
+                            item.role = elem.role;
+                        }
+                    })
+                })
+                localStorage.setItem('executor', JSON.stringify(res1));
+                setExecutor(res1);
+            }
             window.location.reload();
         }catch(e){
             alert('Не удалось добавить исполнителя')
         }
     }
-
-    const addTask = async (info) =>{
-        const res = await request('/api/auth/addtask', 'POST', info);
+    const deleteExecutor = async (userId) =>{
+        const res = await request('/api/auth/deleteexecutor', 'POST', {boardId, userId});
+        const localStorageExec = JSON.parse(localStorage.getItem('executor'));
+        const ind = localStorageExec.findIndex(elem=>elem._id===userId);
+        const newArr=[...localStorageExec.slice(0,ind),...localStorageExec.slice(ind+1)]
+        localStorage.setItem('executor', JSON.stringify(newArr));
+        window.location.reload();
         console.log(res);
-        
-    }
+    } 
+
+    
 
     const localStorageId = localStorage.getItem('userId')
     return(
@@ -189,8 +260,9 @@ const App = () =>{
                 <Route path='/board/' exact>
                     <>
                         <Projects 
-                            board_data={boardData?boardData:[]}
-                            onToggleImportant = {onToggleImportant}    
+                            board_data = { boardData ? boardData: [] }
+                            onToggleImportant = { onToggleImportant }    
+                            addBoard= { addBoard }
                         />
                     </>
                     
@@ -206,6 +278,7 @@ const App = () =>{
                             getTableId={(id)=>setTableId(id)}
                             addTaskList={addTaskList}
                             deleteTaskList={deleteTaskList}
+                            deleteTask={deleteTask}
                             userId={JSON.parse(localStorageId)}
                             addTask={addTask}
                         />
@@ -218,6 +291,7 @@ const App = () =>{
                         addExecutor={addExecutor}
                         getExecutor={getExecutor}
                         executor={executor}
+                        deleteExecutor={deleteExecutor}
                         />
                 </Route>
                 <Route path='/task/:id' render={

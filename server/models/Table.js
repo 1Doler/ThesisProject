@@ -10,7 +10,7 @@ const Table = new Schema({
         author: {type: String},
         performer: {type: Schema.Types.Mixed},
         tag: {type: [String]},
-        status: {type: String, default: 'Status'},
+        status: {type: String, default: 'Open'},
         priority: {type: String},
         completionPercentage: {type: Number, min: 0, max: 100, default: 0},
         createData: {type: Date, default: Date.now},

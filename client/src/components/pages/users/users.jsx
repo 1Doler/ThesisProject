@@ -17,7 +17,7 @@ export default class Board extends Component{
         if(localStorageExec){
 
             return localStorageExec.map(item=>{
-                const {firstName, lastName, email, role} = item;
+                const {firstName, lastName, email, role, _id} = item;
                 return(
                     <div className={classes.users__wrapper__item}>
                         <div className={classes.fullName}>
@@ -29,7 +29,7 @@ export default class Board extends Component{
                         <div className={classes.role}>
                             {role}
                         </div>
-                        <div className={classes.btnDelete}>
+                        <div className={classes.btnDelete} onClick={()=>this.props.deleteExecutor(_id)}>
                             Delete
                         </div>
                     </div>

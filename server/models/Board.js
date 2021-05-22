@@ -12,10 +12,9 @@ const Board = new Schema({
     }],
     tag: {type: [String]},
     completionPercentage: {type: Number, min: 0, max: 100, default: 0},
-    status: {type: String},
+    status: {type: String, default: 'Active'},
     favorite: {type: Boolean},
     startDate: {type: Date, default: Date.now},
-    dueDate: {type: Date},
     duration: {type: Number, min: 0},
 })
 

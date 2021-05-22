@@ -39,7 +39,22 @@ export default class Board extends Component{
         this.setState({table_data: newArr});
         this.props.deleteTaskList(newArr, id);
     }
-
+    
+    onChange = (e) =>{
+        const name = e.target.name;
+        this.setState({[name]: e.target.value})
+    }
+    onAddTask = ()=>{
+        const { addText, addDescr, addExec,addPriority, tableId} = this.state;
+        const {userId} = this.props;
+        if(addText)
+        {
+            this.props.addTask({addText,addDescr,addExec, addPriority, userId, tableId});
+            this.setState({active_modalTask: false})
+        }
+        else
+            alert('Заполните поле "Name Task"')
+    }
 
     mapTable = (data) =>{
         return data.map(item =>{
@@ -66,21 +81,6 @@ export default class Board extends Component{
                 </div>
             )
         })
-    }
-    onChange = (e) =>{
-        const name = e.target.name;
-        this.setState({[name]: e.target.value})
-    }
-    onAddTask = ()=>{
-        const { addText, addDescr, addExec,addPriority, tableId} = this.state;
-        const {userId} = this.props;
-        if(addText)
-        {
-            this.props.addTask({addText,addDescr,addExec, addPriority, userId, tableId});
-            this.setState({active_modalTask: false})
-        }
-        else
-            alert('Заполните поле "Name Task"')
     }
     mapTask = (data,id) =>{
         if(data.length){
@@ -143,6 +143,7 @@ export default class Board extends Component{
                                 {item.textTask}
                             </div>
                         </Link>
+                        
                         <div className={classes.board__wrapper__item__task__status} style={color_status}>
                             {item.status}
                         </div>
@@ -163,6 +164,7 @@ export default class Board extends Component{
                         <div className={classes.board__wrapper__item__task__dueDate} style={colorDate}>
                             {item.dueDate ? moment(item.dueDate).format('DD.MM.YYYY') : null}
                         </div> 
+                        <div className={classes.deleteTask} onClick={()=>this.props.deleteTask(id,item._id)}>Delete task</div>
                     </div>
                 )
             })
@@ -194,7 +196,6 @@ export default class Board extends Component{
         }
         let visuble = <h1>NOT DATA</h1>;
         const pJs = JSON.parse(localStorageRef);
-        console.log('DDDD',pJs)
         if(this.state.table_data){
             const filter_data = this.state.table_data.filter((elem)=>{
                 return elem.boardId === board_id
@@ -287,8 +288,9 @@ export default class Board extends Component{
                     <h2 className={classes.title}>
                         Page Board
                     </h2>
-                    <Link to='/users' className={classes.users}>USERS</Link>
-                    <button className={classes.board__buttonAddTaskList} onClick={()=>{this.setState({active_modal: true})}}>Add Task List</button>
+                    <Link to='/users' className={classes.users}>Users</Link>
+                    <Link to='/info' className={classes.users}>Info</Link>
+                    <button className={classes.board__buttonAddTaskList} onClick={()=>{this.setState({active_modal: true})}}>Create a Task List</button>
                     <div className={classes.board__wrapper}>
                         {visuble}
                     </div>

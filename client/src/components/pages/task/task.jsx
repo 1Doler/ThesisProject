@@ -74,8 +74,11 @@ export default class Task extends Component{
         const name = e.target.name;
         
         await this.setState({[name]: e.target.value})
+        
         const {startDate, dueDate} = this.state
-        this.setState({duration:moment(dueDate).diff(moment(startDate),'days')})
+
+        if(dueDate && startDate)
+            this.setState({duration:moment(dueDate).diff(moment(startDate),'days')})
     }
     changeTextarea = (e) => {
         this.setState({description: e.target.value})
@@ -107,8 +110,8 @@ export default class Task extends Component{
             <option value="To Be Tested">To Be Tested</option>,
             <option value="On Hold">On Hold</option>,
             <option value="Delayed">Delayed</option>,
-            <option value="Closed">Closed</option>,
-            <option value="Cancalled">Cancalled</option>
+            <option value="Cancalled">Cancalled</option>,
+            <option value="Closed" disabled>Closed</option>
         ];
         const optionPriority = [
             <option value="None">None</option>,

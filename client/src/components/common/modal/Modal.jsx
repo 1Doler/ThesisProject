@@ -34,7 +34,7 @@ export default class Modal extends Component{
                             <p>TaskList</p>
                             <input value={this.state.nameTask} onChange={(e)=>this.setState({nameTask: e.target.value})}/>
                         </div>
-                        <button className={classes.modal__content__buttonAdd} onClick={()=>this.onClick()}>ADD</button>
+                        <button className={classes.modal__content__buttonAdd} onClick={()=>this.onClick()}>ADD</button><br/>
                         <button className={classes.modal__content__buttonCancel} onClick={()=>setActive()}>CANCEL</button>
                     </div>
                 </div>

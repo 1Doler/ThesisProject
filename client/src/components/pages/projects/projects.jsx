@@ -13,12 +13,97 @@ export default class Projects extends Component{
         super(props);
         this.state={
             search_data: [],
-            open: false
+            open: false,
+            active_modal: false,
+            nameBoard: '',
+            descr: '',
+            status: 'Active'
         }
     }
 
-   
-
+   onChange = (e) =>{
+       const name = e.target.name;
+       this.setState({[name]: e.target.value})
+   }
+   onClickBtn = (nameBoard, descr, status) =>{
+        if(nameBoard){
+            this.props.addBoard(nameBoard, descr, status);
+            this.setState({active_modal: false})
+        }
+        else
+            alert('Заполните поле Name board')
+   }
+    modal = () =>{
+        const optionStatus = [
+            <option value="Acive">Acive</option>,
+            <option value="Open">Open</option>,
+            <option value="Plannig">Plannig</option>,
+            <option value="In Progress">In Progress</option>,
+            <option value="On Track">On Track</option>,
+            <option value="In Tested">In Tested</option>,
+            <option value="On Hold">On Hold</option>,
+            <option value="Delayed">Delayed</option>,
+            <option value="Cancalled">Cancalled</option>,
+            <option value="Ready">Ready</option>
+        ];
+        const { nameBoard, descr, status } = this.state;
+        return(
+            <div className={classes.modal}>
+                <div className={classes.addTask__content}>
+                        <h3>Create new project</h3>
+                        <div className={classes.addTask__content__item}>
+                            <div className={classes.addTask__content__item__text}>
+                                Name project:
+                            </div>
+                            <input 
+                                className={classes.inp} 
+                                type='text'
+                                name='nameBoard' 
+                                value={nameBoard}
+                                onChange={(e)=>this.onChange(e)}
+                            />
+                        </div>
+                        <div className={classes.addTask__content__item}>
+                            <div className={classes.addTask__content__item__text}>
+                                Description: 
+                            </div>
+                            <input 
+                                className={classes.inp} 
+                                type='text'
+                                name='descr' 
+                                value={descr}
+                                onChange={(e)=>this.onChange(e)}
+                            />
+                        </div>
+                        <div className={classes.addTask__content__item}>
+                            <div className={classes.addTask__content__item__text}>
+                                Select priority: 
+                            </div>
+                            <select 
+                                className={classes.inp}
+                                name='status' 
+                                value={status}
+                                onChange={(e)=>this.onChange(e)}
+                            >
+                                {[...optionStatus]}
+                            </select>
+                        </div>
+                        <div 
+                            className={classes.addTask__content__buttonAdd}
+                            onClick={()=>this.onClickBtn(nameBoard, descr, status)}
+                        >
+                            ADD
+                        </div>
+                        <div 
+                            className={classes.addTask__content__buttonCancel}
+                            onClick={()=>this.setState({active_modal: false})}
+                        >
+                            CANCEL
+                        </div>
+                    </div>
+            </div>
+        )
+    }
     render(){
         const {board_data, onToggleImportant} = this.props;
         const {search_data} = this.state;
@@ -47,6 +132,7 @@ export default class Projects extends Component{
             <div className={classes.sectionProjects}>
                 <Nav />
                 <div className={classes.container}>
+                    {this.state.active_modal ? this.modal() : null}
                     <Snackbar
                         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                         open={this.state.open}
@@ -59,6 +145,9 @@ export default class Projects extends Component{
                     <div className={classes.board}>
                         <h2>Page Projects</h2>
                         <Search Submit={onSearch}/>
+                        <button onClick={()=>this.setState({active_modal: true})} className={classes.board__btn}>
+                            Create new project
+                        </button>
                         <ProjectItem data={vs} onToggleImportant={onToggleImportant}/>
                     </div>
                 </div>

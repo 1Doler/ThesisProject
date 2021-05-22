@@ -57,31 +57,6 @@ router.post('/updatetask', async (req, res)=>{
         res.status(400).json({message: 'Ошибочка'})
     }
 })
-
-/* router.post('/addtask', async (req, res)=>{
-    try{
-        const data = req.body;
-        const {addText, addDescr, addExec, addPriority, userId} = data;
-        const result = await Table.updateOne(
-            {   
-                '_id': _id
-            },
-            {'$push':{
-                task:{
-                    $each: [ {
-                        'textTask': addText, 
-                        'description': addDescr,
-                        'author': userId,
-                        'performer': addExec,
-                        'priority': addPriority
-                    } ] 
-                }
-            }}
-        )
-    }catch(e){
-        res.status(400).json({message: 'Ошибочка'})
-    }
-}) */
 router.post('/addtask', async (req, res)=>{
     try{
         const data = req.body;
@@ -107,5 +82,38 @@ router.post('/addtask', async (req, res)=>{
     }catch(e){
         res.status(400).json({message: 'Ошибочка'})
     }
+})
+router.post('/deleteexecutor', async (req, res)=>{
+    try{
+        const {userId, boardId} = req.body;
+        const result = await Board.updateOne({_id: boardId}, 
+        {'$pull':
+            {
+                'executor': {'userId': userId}
+            }
+        }
+        );
+
+        const delExecTask = await Table.updateMany(
+            {boardId: boardId, 'task.performer':userId},
+            {$set: {
+                'task.$.performer': ' '
+            }}
+        )
+        res.status(200).json({message: delExecTask});
+    }catch(e){
+        res.status(400).json({message: 'Ошибочка'})
+    }
+})
+router.post('/deletetask', async (req,res)=>{
+    const {tableId, taskId} = req.body;
+        const result = await Table.updateOne({_id: tableId}, 
+        {'$pull':
+            {
+                'task': {'_id': taskId}
+            }
+        }
+    );
+    res.status(200).json({message: result});
 })
 module.exports = router
