@@ -42,9 +42,14 @@ export default class Task extends Component{
       }
     getData = (taskId = this.props.taskId) =>{
         const {data, tableId,dataBoard,boardId} = this.props;
-        const b = dataBoard.filter(elem=> elem._id === boardId);
+        if(tableId)
+            localStorage.setItem('tableId', tableId)
+        const tblId = localStorage.getItem('tableId')
+       /*  const brdId = localStorage.getItem('boardId')
+
+        const b = dataBoard.filter(elem=> elem._id === brdId); */
         const filter1 = data.filter((elem)=>{
-            return elem._id === tableId
+            return elem._id === tblId
         })
         const filter2 = filter1[0].task.filter((elem)=>{
             return elem._id === taskId
@@ -54,7 +59,6 @@ export default class Task extends Component{
         ;
         const dif = dueDate && startDate ? moment(dueDate).diff(moment(startDate),'days') : '';
         this.setState({
-            nameBoard: b[0].nameBoard,
             filt: filter1[0],
             text: textTask,
             _id,
@@ -98,7 +102,7 @@ export default class Task extends Component{
     }
     
     render(){
-        const {filt, text, description, author,status,performer,dueDate,startDate,priority, duration,completionPercentage,_id,nameBoard} = this.state;
+        const {filt, text, description, author,status,performer,dueDate,startDate,priority, duration,completionPercentage,_id} = this.state;
         
         const optionStatus = [
             <option value=""></option>,
@@ -121,7 +125,6 @@ export default class Task extends Component{
         ];
         let optionExec = [];
         
-        const {executor} =this.props;
         const localStorageExec = localStorage.getItem('executor');
         if(JSON.parse(localStorageExec))
         {
@@ -134,11 +137,11 @@ export default class Task extends Component{
         for(let i=0; i<=100; i+=10){
             optionCP.push(<option value={i}>{i}</option>)
         }
-        const {tableId} = this.props;
+        const tblId = localStorage.getItem('tableId')
       
         return(
             
-            <div key={tableId} className={classes.taskPage}>
+            <div key={tblId} className={classes.taskPage}>
                 
                 <Tasks data={filt} id={_id}/>
                 
@@ -152,7 +155,7 @@ export default class Task extends Component{
                         <div className={classes.task__text}>
                             <input value={text} type='text' name='text' onChange={(e)=>{this.onChangeInput(e)}}/>
                         </div>
-                        <Link to={'/board/'+this.props.boardId}><i className="fas fa-window-close" style={{fontSize: '30px'}}></i></Link>
+                        <Link to={'/board/'+'tasklist'}><i className="fas fa-window-close" style={{fontSize: '30px'}}></i></Link>
                     </div>
                     <div className={classes.task__info}>
                         <div className={classes.task__info__author}>
@@ -161,7 +164,7 @@ export default class Task extends Component{
                         <span>|</span>
                         <div className={classes.task__info__nameTable}>
                             <i className="fas fa-briefcase"></i>
-                            {nameBoard}
+                            {/* {nameBoard} */}
                         </div>
                     </div>
                     <div className={classes.task__status}>
@@ -240,7 +243,7 @@ export default class Task extends Component{
                     <Button 
                         variant="contained" 
                         color="secondary" 
-                        onClick={()=>this.props.updateTable({_id, tableId, description, text,status,performer,dueDate,startDate,priority, duration,completionPercentage})}
+                        onClick={()=>this.props.updateTable({_id, tblId, description, text,status,performer,dueDate,startDate,priority, duration,completionPercentage})}
                     >
                         Save
                     </Button>

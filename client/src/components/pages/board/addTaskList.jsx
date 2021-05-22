@@ -28,7 +28,6 @@ export default class AddTaksList extends Component{
                     active={this.state.active_modal} 
                     setActive={()=>(this.setState({active_modal: false}))}
                     addTaskList={this.props.addTaskList}
-                    addTable={this.props.addTable}
                     board_id={this.props.board_id}
                 />
             </div>

@@ -16,7 +16,6 @@ export default class Modal extends Component{
         if(this.state.nameTask)
         {
             addTaskList(board_id, this.state.nameTask);
-            addTable(board_id, this.state.nameTask);
             setActive();
         }
         else

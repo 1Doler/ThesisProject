@@ -31,12 +31,13 @@ router.post('/deletetasklist', async (req, res)=>{
 router.post('/updatetask', async (req, res)=>{
     try{
         const data = req.body;
-        const {_id, tableId, description, text, status, performer, startDate, priority, duration, completionPercentage, dueDate} = data;
-        await Table.find({'_id': tableId,
+        const {_id, tblId, description, text, status, performer, startDate, priority, duration, completionPercentage, dueDate} = data;
+        await Table.find({'_id': tblId,
         'task._id': _id,});
+        console.log(_id+'====='+tblId)
         const result = await Table.update(
             {   
-                '_id': tableId,
+                '_id': tblId,
                 'task._id': _id,
                     
             },

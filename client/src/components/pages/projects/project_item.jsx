@@ -21,7 +21,7 @@ export default class BoardItem extends Component{
         if(data.length){
             return data.map(item=>{
                 const {nameBoard, description, userId, status, favorite,_id} = item;
-                const link_board = '/board/'+ _id;
+                const link_board = '/board/'+ 'tasklist';
                 
                 const isFavorite = !favorite ? 
                     <i className="far fa-star" style={styleIcon} onClick={()=>{onToggleImportant(_id)}}></i> : 
@@ -32,7 +32,7 @@ export default class BoardItem extends Component{
                             {isFavorite}    
                         </td>
                         <td className={classes.board_item__wrapper__text}>
-                            <Link to={link_board} style={styleLink}>{nameBoard}</Link>
+                            <Link to={link_board} onClick={()=>localStorage.setItem('boardId', _id)} style={styleLink}>{nameBoard}</Link>
                         </td>
                         <td className={classes.board_item__wrapper__author}>
                             {userId}

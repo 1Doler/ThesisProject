@@ -27,17 +27,9 @@ export default class Board extends Component{
     }
     
 
-    addTable = (boardId, nameTable) =>{
-        const newItem = {boardId,nameTable,task:[]}
-        this.setState({table_data: [...this.state.table_data,newItem]})
-    }
 
     delTable = (id) =>{
-        const {table_data} = this.state;
-        const ind = table_data.findIndex(elem=> elem._id === id);
-        const newArr = [...table_data.slice(0,ind),...table_data.slice(ind+1)]; 
-        this.setState({table_data: newArr});
-        this.props.deleteTaskList(newArr, id);
+        this.props.deleteTaskList(id);
     }
     
     onChange = (e) =>{
@@ -187,20 +179,17 @@ export default class Board extends Component{
         const { addText, addDescr, addExec,addPriority} = this.state;
         const {board_id,addTaskList,userId} = this.props;
         const localStorageExec = localStorage.getItem('executor');
-        const localStorageRef = localStorage.getItem('table')
         let optionExec = [];
-        const {executor} =this.props;
         if(JSON.parse(localStorageExec))
         {
             JSON.parse(localStorageExec).map(item=>optionExec.push(<option value={item._id}>{item.firstName} {item.lastName}</option>))
         }
         let visuble = <h1>NOT DATA</h1>;
-        const pJs = JSON.parse(localStorageRef);
         if(this.state.table_data){
             const filter_data = this.state.table_data.filter((elem)=>{
                 return elem.boardId === board_id
             })
-            visuble = this.mapTable(filter_data).length ? this.mapTable(filter_data) : <AddTaskList board_id={board_id} addTable={this.addTable} addTaskList={addTaskList}/>;
+            visuble = this.mapTable(filter_data).length ? this.mapTable(filter_data) : <AddTaskList board_id={board_id} addTaskList={addTaskList}/>;
         }
         const activeStyle = this.state.active_modalTask ? {display: 'flex'}:{display: 'none'};
         return(
@@ -209,7 +198,6 @@ export default class Board extends Component{
                     active={this.state.active_modal} 
                     setActive={()=>(this.setState({active_modal: false}))}
                     addTaskList={addTaskList}
-                    addTable={this.addTable}
                     board_id={board_id}
                 />
                 <div className={classes.addTask} style={activeStyle}>

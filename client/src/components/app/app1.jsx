@@ -14,11 +14,9 @@ const App = () =>{
     const {request} = useHttp();
     const [boardData,setBoardData] = useState(null);
     const [boardId, setBoardId] = useState(null);
-    const [table, setTable] = useState(null);
     const [tableId, setTableId] = useState(null);
     const [userId, setUserId] = useState(null)
     const [executor, setExecutor] = useState(null)
-    const [uf, setUf] = useState(false)
 
     ////getBoardDate
     const fetchData1 = async () =>{
@@ -40,14 +38,16 @@ const App = () =>{
         try{
             const data = await request('/api/auth/table', 'GET');
             localStorage.setItem('table', JSON.stringify(data));
-            setTable(data)
         }
         catch(e){
             alert('ERROR IN API TASK')
         }
         
-    },[uf])
+    },[])
 
+    const getTableData = async () =>{
+        
+    }
 
     useEffect(()=>{
         getExecutor();
@@ -144,7 +144,7 @@ const App = () =>{
         try{
             await request('/api/auth/addtasklist', 'POST', {board_id, nameTaskList});
             const data1 = await request('/api/auth/table', 'GET');
-            await setTable(data1)
+            
             localStorage.setItem('table', JSON.stringify(data1));
             window.location.reload();
             
@@ -152,12 +152,12 @@ const App = () =>{
             console.log('Error app')
         }
     }
-    const deleteTaskList = async (newArr, id) =>{
+    const deleteTaskList = async (id) =>{
         try{
             await request('/api/auth/deletetasklist', 'POST', {id})
-            setTable(newArr);
+            
             const data1 = await request('/api/auth/table', 'GET');
-            await setTable(data1)
+            
             localStorage.setItem('table', JSON.stringify(data1));
             window.location.reload();
         }catch(e){
@@ -166,11 +166,11 @@ const App = () =>{
     }
     const updateTable = async (state) =>{
         try{
-            await request('/api/auth/updatetask', 'POST', state);
+            const res = await request('/api/auth/updatetask', 'POST', state);
+            console.log(res)
             const data1 = await request('/api/auth/table', 'GET');
-            await setTable(data1)
+            window.location.reload();
             localStorage.setItem('table', JSON.stringify(data1));
-            window.location.assign(`/board/${boardId}`);
         }catch(e){
             alert('Error app')
         }
@@ -179,7 +179,7 @@ const App = () =>{
     const addTask = async (info) =>{
         const res = await request('/api/auth/addtask', 'POST', info);
         const data1 = await request('/api/auth/table', 'GET');
-        await setTable(data1)
+        
         localStorage.setItem('table', JSON.stringify(data1));
         window.location.reload();
         
@@ -187,7 +187,6 @@ const App = () =>{
     const deleteTask = async (tableId, taskId) =>{
         await request('/api/auth/deletetask', 'POST', {tableId,taskId});
         const data1 = await request('/api/auth/table', 'GET');
-        await setTable(data1)
         localStorage.setItem('table', JSON.stringify(data1));
         window.location.reload();
     }
@@ -248,6 +247,7 @@ const App = () =>{
     
 
     const localStorageId = localStorage.getItem('userId')
+    const localStorageTable = JSON.parse(localStorage.getItem('table'))
     return(
         <Router>
             <div className={classes.app}>
@@ -270,10 +270,11 @@ const App = () =>{
                 <Route path='/board/:id' render={
                     ({match}) => {
                         const {id} = match.params;
+                        
+                        
                         setBoardId(id);
                         return <Board 
-                            data={table} 
-                            board_id={id}
+                            board_id={localStorage.getItem('boardId')}
                             executor={executor}
                             getTableId={(id)=>setTableId(id)}
                             addTaskList={addTaskList}
@@ -297,13 +298,16 @@ const App = () =>{
                 <Route path='/task/:id' render={
                     ({match}) => {
                         const {id} = match.params;
+                        localStorage.setItem('taskId', id)
+                        const tskId = localStorage.getItem('taskId')
+                        const brdId = localStorage.getItem('boardId')
                         return <Task 
                             executor={executor}
                             dataBoard={boardData}
-                            data={table}
+                            data={localStorageTable}
                             tableId={tableId} 
-                            taskId={id}
-                            boardId={boardId}
+                            taskId={tskId}
+                            boardId={brdId}
                             updateTable={updateTable}
                         />
                     }
