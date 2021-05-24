@@ -42,8 +42,6 @@ export default class Task extends Component{
       }
     getData = (taskId = this.props.taskId) =>{
         const {data, tableId,dataBoard,boardId} = this.props;
-        if(tableId)
-            localStorage.setItem('tableId', tableId)
         const tblId = localStorage.getItem('tableId')
        /*  const brdId = localStorage.getItem('boardId')
 
@@ -55,24 +53,30 @@ export default class Task extends Component{
             return elem._id === taskId
         })
         const task_data = filter2[0];
-        const {textTask,_id, description, author,status, dueDate, startDate, createDate, priority,completionPercentage, performer} = task_data;
-        ;
-        const dif = dueDate && startDate ? moment(dueDate).diff(moment(startDate),'days') : '';
-        this.setState({
-            filt: filter1[0],
-            text: textTask,
-            _id,
-            description,
-            author,
-            status,
-            dueDate: dueDate?moment(dueDate).format('YYYY-MM-DD'):null,
-            startDate: startDate?moment(startDate).format('YYYY-MM-DD'):null,
-            createDate: moment(createDate).format('YYYY-MM-DD'),
-            priority,
-            duration: dif,
-            performer,
-            completionPercentage
-        })
+        if(task_data)
+        {
+
+            const {textTask,_id, description, author,status, dueDate, startDate, createDate, priority,completionPercentage, performer} = task_data;
+            ;
+            const dif = dueDate && startDate ? moment(dueDate).diff(moment(startDate),'days') : '';
+            const exec = JSON.parse(localStorage.getItem('executor'))
+            const ind = exec.findIndex(elem => elem._id === author);
+            this.setState({
+                filt: filter1[0],
+                text: textTask,
+                _id,
+                description,
+                author: exec[ind] ? exec[ind].lastName+' '+exec[ind].firstName: '',
+                status,
+                dueDate: dueDate?moment(dueDate).format('YYYY-MM-DD'):null,
+                startDate: startDate?moment(startDate).format('YYYY-MM-DD'):null,
+                createDate: moment(createDate).format('YYYY-MM-DD'),
+                priority,
+                duration: dif,
+                performer,
+                completionPercentage
+            })
+        }
     }
     onChangeInput = async (e) =>{
         const name = e.target.name;
@@ -196,7 +200,7 @@ export default class Task extends Component{
                                     <div className={classes.task__information__wrapper__owner}>
                                         <p>Executor</p> 
                                         <select value={performer} onChange={(e)=>{this.setState({performer: e.target.value})}}>
-                                            <option value='none'>None</option>
+                                            <option value=' '>None</option>
                                             {[...optionExec]}
                                         </select>
                                     </div>

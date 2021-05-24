@@ -1,15 +1,17 @@
-import React, { useState,useEffect } from 'react'
 import { Route, BrowserRouter as Router } from "react-router-dom"
+import React, { useState,useEffect } from 'react'
 import {useHttp} from '../hooks/http.hook'
 
 
+import InfoBoard from '../pages/info_board/info_board'
 import Projects from '../pages/projects/projects'
 import Board from '../pages/board/board'
-import Task from '../pages/task/task'
-import Main from '../pages/main/main'
 import Users from '../pages/users/users'
+import Main from '../pages/main/main'
+import Task from '../pages/task/task'
 
 import classes from './app.module.sass'
+
 const App = () =>{
     const {request} = useHttp();
     const [boardData,setBoardData] = useState(null);
@@ -24,7 +26,17 @@ const App = () =>{
             const localStorageRef = localStorage.getItem('userId')
             const id = JSON.parse(localStorageRef);
             const data = await request('/api/auth/boarddata1', 'POST', {id});
-            setBoardData(data);
+            const executorId = [];
+            data.map(item=>{
+                executorId.push(item.userId)
+            })
+            const res = await request('/api/auth/getexecutor', 'POST', {executorId});
+            const nd = data.map(i=>{
+                const ind = res.findIndex(elem => elem._id === i.userId);
+                i.fullName = res[ind].lastName+' '+res[ind].firstName
+                return i
+            })
+            setBoardData(nd);
         }catch(e){
             alert('Инет пропал')
         }
@@ -44,10 +56,6 @@ const App = () =>{
         }
         
     },[])
-
-    const getTableData = async () =>{
-        
-    }
 
     useEffect(()=>{
         getExecutor();
@@ -91,13 +99,12 @@ const App = () =>{
     const logIn = async (email, password) =>{
         try{
             const res = await request('/api/auth/login', 'POST', {email, password})
-            console.log(res)
             if(res.message==='Вы удачно вошли в аккаунт')
             {
                 setUserId(res.user._id)
             }
             else
-                console.log('nooooooo')
+                alert('Некорректно ввели пароль/логин')
         }catch(e){
             console.log('Error app');
         }
@@ -105,7 +112,7 @@ const App = () =>{
     const reg = async (email, password) =>{
         try{
             const res = await request('/api/auth/register', 'POST', {email, password})
-            console.log(res)
+            alert('Вы удачно зарегистрировались')
         }catch(e){
             alert(e)
         }
@@ -116,7 +123,6 @@ const App = () =>{
         try{
             const lsUserId = JSON.parse(localStorage.getItem('userId'))
             const a = await request('/api/auth/addboard', 'POST', {lsUserId, nameBoard, descr, status})
-            console.log('ljk;')
             window.location.reload();
         }catch(e){
             console.log("eerrror")
@@ -166,8 +172,9 @@ const App = () =>{
     }
     const updateTable = async (state) =>{
         try{
-            const res = await request('/api/auth/updatetask', 'POST', state);
-            console.log(res)
+            const {completionPercentage, status} = state;
+            const st = completionPercentage != 100 ? status : 'Closed'
+            const res = await request('/api/auth/updatetask', 'POST', {...state, status: st});
             const data1 = await request('/api/auth/table', 'GET');
             window.location.reload();
             localStorage.setItem('table', JSON.stringify(data1));
@@ -196,40 +203,43 @@ const App = () =>{
     const addExecutor = async (executors) =>{
         try{
             const res = await request('/api/auth/addexecutor', 'POST', executors);
-            console.log(res)
-            const index = boardData.findIndex(elem=>elem._id===boardId)
-            const old = boardData[index];
-            const newItem = {userId: res.userId, role: executors.role};
-            old.executor.push(newItem);
-            console.log(old)
-            const newArr = [...boardData.slice(0,index),old,...boardData.slice(index+1)]
-            setBoardData(newArr);
-            if(boardData){
-                const executorId = [];
-                const b = [];
-                boardData.map(elem => {
-                    if (elem._id === boardId)
-                    {
-                        b.push(elem)
-                        elem.executor.map(item=>{
-                            executorId.push(item.userId);
-                        })
-                        
-                    }
-                })
-                
-                const res1 = await request('/api/auth/getexecutor', 'POST', {executorId});
-                res1.map(item=>{
-                    b[0].executor.map(elem=>{
-                        if(elem.userId === item._id){
-                            item.role = elem.role;
+            if(res!=0)
+            {
+                const index = boardData.findIndex(elem=>elem._id===boardId)
+                const old = boardData[index];
+                const newItem = {userId: res.userId, role: executors.role};
+                old.executor.push(newItem);
+                const newArr = [...boardData.slice(0,index),old,...boardData.slice(index+1)]
+                setBoardData(newArr);
+                if(boardData){
+                    const executorId = [];
+                    const b = [];
+                    boardData.map(elem => {
+                        if (elem._id === boardId)
+                        {
+                            b.push(elem)
+                            elem.executor.map(item=>{
+                                executorId.push(item.userId);
+                            })
+                            
                         }
                     })
-                })
-                localStorage.setItem('executor', JSON.stringify(res1));
-                setExecutor(res1);
+                    
+                    const res1 = await request('/api/auth/getexecutor', 'POST', {executorId});
+                    res1.map(item=>{
+                        b[0].executor.map(elem=>{
+                            if(elem.userId === item._id){
+                                item.role = elem.role;
+                            }
+                        })
+                    })
+                    localStorage.setItem('executor', JSON.stringify(res1));
+                    setExecutor(res1);
+                }
+                window.location.reload();
             }
-            window.location.reload();
+            else
+                alert('Такой пользователь уже добавлен')
         }catch(e){
             alert('Не удалось добавить исполнителя')
         }
@@ -241,13 +251,13 @@ const App = () =>{
         const newArr=[...localStorageExec.slice(0,ind),...localStorageExec.slice(ind+1)]
         localStorage.setItem('executor', JSON.stringify(newArr));
         window.location.reload();
-        console.log(res);
     } 
 
     
 
     const localStorageId = localStorage.getItem('userId')
     const localStorageTable = JSON.parse(localStorage.getItem('table'))
+    const localStorageBoardId = localStorage.getItem('boardId')
     return(
         <Router>
             <div className={classes.app}>
@@ -267,16 +277,19 @@ const App = () =>{
                     </>
                     
                 </Route>
+                <Route path='/info' exact>
+                    <InfoBoard 
+                        table={localStorageTable}
+                        boardId={localStorageBoardId}
+                    />                    
+                </Route>
                 <Route path='/board/:id' render={
                     ({match}) => {
-                        const {id} = match.params;
-                        
-                        
-                        setBoardId(id);
+                        setBoardId(localStorage.getItem('boardId'))
                         return <Board 
                             board_id={localStorage.getItem('boardId')}
                             executor={executor}
-                            getTableId={(id)=>setTableId(id)}
+                            getTableId={(id)=>{setTableId(id);localStorage.setItem('tableId', id)}}
                             addTaskList={addTaskList}
                             deleteTaskList={deleteTaskList}
                             deleteTask={deleteTask}

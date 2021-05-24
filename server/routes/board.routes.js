@@ -11,7 +11,6 @@ const router = Router()
 
 router.post('/boarddata1', async (req, res) =>{
     try{
-        
         const alldata = await Board.find({$or: [{userId: req.body.id}, {'executor.userId': req.body.id}]});   
         res.json(alldata);
     }catch(e) {
@@ -21,7 +20,7 @@ router.post('/boarddata1', async (req, res) =>{
 router.post('/addboard', async (req, res) =>{
     try{
         const {lsUserId, nameBoard, descr, status} = req.body;
-        const newItem = new Board({userId: lsUserId,nameBoard, description: descr,status}); 
+        const newItem = new Board({userId: lsUserId,nameBoard, description: descr,status, executor: {userId: lsUserId, role: 'Admin'}}); 
         await newItem.save();
        
         res.json('good');
@@ -35,7 +34,6 @@ router.post('/ontoggleimportant', async (req, res)=>{
         const {_id, favorite} = data;
         const ab = await Board.updateOne({_id},{$set: {favorite}},(err, result) => {
             if (err) {
-              console.log('Unable update user: ', err)
               throw err
             }
         })
@@ -76,18 +74,25 @@ router.post('/addexecutor', async(req,res)=>{
         {
             return res.status(400).json({message: 'Такого пользователя не существует'});
         }
-        
-        const result = await Board.updateOne(
-            {   
-                '_id': boardId
-            },
-            {'$push':{
-                executor:{
-                    $each: [ {'userId': user._id, 'role': role} ] 
-                }
-            }}
-        )
-        res.status(200).json({userId: user._id});
+        const exec = await Board.findOne({
+            '_id': boardId,
+            'executor.userId': user._id
+        });
+        if(!exec){
+            await Board.updateOne(
+                {   
+                    '_id': boardId
+                },
+                {'$push':{
+                    executor:{
+                        $each: [ {'userId': user._id, 'role': role} ] 
+                    }
+                }}
+            )
+            res.status(200).json({userId: user._id});
+        }
+        else
+            return res.status(400).json({message: 'Ошибочка'})
 
     }catch(e){
         res.status(400).json({message: 'Ошибочка'})
