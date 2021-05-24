@@ -1,0 +1,96 @@
+@mixin styleSection()
+    border: 3px solid #81bb7c
+    padding: 10px
+    padding-right: 40px
+    margin-right: 40px
+    border-radius: 5px
+    &:hover h3
+        color: #2c7227
+    &:hover
+        box-shadow: 0px 2px 10px #4dbe44
+    .wrapper
+        padding: 20px
+        margin-top: 5px
+        .item
+            margin-top: 5px 
+            min-width: 180px
+            display: flex
+            justify-content: space-between
+            border: 1px solid white
+            border-bottom: 1px solid #e4e4e4
+            &:hover
+                background-color: #e4e4e4
+                color: #2c7227
+                cursor: pointer
+            div
+                margin-right: 20px
+    
+.info
+    font-size: 1em
+    width: 83vw
+    overflow-y: scroll
+    height: 95vh
+    &::-webkit-scrollbar-track
+        margin: 6px
+        border-radius: 4px
+    &::-webkit-scrollbar
+        width: 4px
+    &::-webkit-scrollbar-thumb
+        border-radius: 4px
+        background-color: #f0f2f5
+    &::-webkit-scrollbar-thumb
+        background-color: #414141
+    .boardInfo
+        @include styleSection
+    .fullStatus
+        margin-top: 40px
+        display: flex
+        justify-content: space-between
+        .status
+            max-width: 450px
+            @include styleSection
+        .statusTask
+            width: 50vw
+            @include styleSection
+            .wrapper
+                overflow-y: scroll
+                height: 30vh
+                &::-webkit-scrollbar-track
+                    margin: 6px
+                    border-radius: 4px
+                &::-webkit-scrollbar
+                    width: 4px
+                &::-webkit-scrollbar-thumb
+                    border-radius: 4px
+                    background-color: #f0f2f5
+                &::-webkit-scrollbar-thumb
+                    background-color: #2c7227
+                .item
+                    .textTask
+                        color: black
+                        text-decoration: none
+                        &:hover
+                            color: #2c7227
+    .overdue
+        @include styleSection
+        margin-top: 40px
+        .wrapper
+            overflow-y: scroll
+            height: 200px
+            &::-webkit-scrollbar-track
+                margin: 6px
+                border-radius: 4px
+            &::-webkit-scrollbar
+                width: 4px
+            &::-webkit-scrollbar-thumb
+                border-radius: 4px
+                background-color: #f0f2f5
+            &::-webkit-scrollbar-thumb
+                background-color: #2c7227
+            .item
+                .textTask
+                    color: black
+                    text-decoration: none
+                    &:hover
+                        color: #2c7227
+        

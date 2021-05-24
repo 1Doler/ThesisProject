@@ -12,15 +12,12 @@ export default class BoardItem extends Component{
 
     Item = () =>{
         const {onToggleImportant, data} = this.props;
-        /* const nameBoard='Board',description='',author='Author',tag=['1','2','3'],
-        completionPercentage=20,status='Ready',dueDate='2014-08-05T19:42:51.499+00:00',duration= 5,nameTable='Table',performer='Perf',priority='Priority',startDate='2014-08-05T19:42:51.499+00:00';
-        const board_data = [{nameBoard, description,author,tag,completionPercentage,  status,dueDate,duration,favorite: false,table:[{nameTable,task:{textTask:'TextTask',description,author,performer,tag,status,priority,completionPercentage,startDate,dueDate}},{nameTable,task:{textTask:'TextTask',description,author,performer,tag,status,priority,completionPercentage,startDate,dueDate}}]}];
-        const data = this.props.data.length ? this.props.data : board_data; */
+        
         const styleIcon = {color: '#99cc60', cursor: 'pointer'};
         const styleLink = {textDecoration: 'none',color: 'black'};
         if(data.length){
             return data.map(item=>{
-                const {nameBoard, description, userId, status, favorite,_id} = item;
+                const {nameBoard, description, fullName, status, favorite,_id} = item;
                 const link_board = '/board/'+ 'tasklist';
                 
                 const isFavorite = !favorite ? 
@@ -35,7 +32,7 @@ export default class BoardItem extends Component{
                             <Link to={link_board} onClick={()=>localStorage.setItem('boardId', _id)} style={styleLink}>{nameBoard}</Link>
                         </td>
                         <td className={classes.board_item__wrapper__author}>
-                            {userId}
+                            {fullName}
                         </td>
                         <td className={classes.board_item__wrapper__descr}>
                             {description}

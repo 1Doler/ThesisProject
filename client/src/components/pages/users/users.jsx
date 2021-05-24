@@ -18,6 +18,7 @@ export default class Board extends Component{
 
             return localStorageExec.map(item=>{
                 const {firstName, lastName, email, role, _id} = item;
+                const disNone = role === 'Admin' ? {display: 'none'} : null;
                 return(
                     <div className={classes.users__wrapper__item}>
                         <div className={classes.fullName}>
@@ -29,7 +30,7 @@ export default class Board extends Component{
                         <div className={classes.role}>
                             {role}
                         </div>
-                        <div className={classes.btnDelete} onClick={()=>this.props.deleteExecutor(_id)}>
+                        <div className={classes.btnDelete} style={disNone} onClick={()=>this.props.deleteExecutor(_id)}>
                             Delete
                         </div>
                     </div>

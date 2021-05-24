@@ -7,7 +7,7 @@ const Board = new Schema({
     description: {type: String},
     author: {type: String},
     executor: [{
-        userId: {type: Types.ObjectId, ref: 'Users'},
+        userId: {type: Types.ObjectId, ref: 'Users', unique: true},
         role: {type: String}
     }],
     tag: {type: [String]},

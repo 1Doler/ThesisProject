@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import Nav from '../../common/nav/Nav'
-import AddTaskList from './addTaskList'
 import Modal from '../../common/modal/Modal'
+import AddTaskList from './addTaskList'
+import Nav from '../../common/nav/Nav'
 
 import * as moment from 'moment'
 
@@ -123,15 +123,18 @@ export default class Board extends Component{
                     case ('In Progress'):
                         color_status={backgroundColor: '#ffd54f'};
                         break;
+                    case ('Closed'):
+                        color_status={backgroundColor: 'red'};
+                        break;
                     default:
                         color_status={backgroundColor: '#99cc60'};
                         break;
                 }
-
+                const decorText = item.completionPercentage === 100? {textDecoration: 'line-through'} : null
                 return(
                     <div key={item._id} className={classes.board__wrapper__item__task}>
                         <Link onClick={()=>this.props.getTableId(id)} to={link_task} style={{textDecoration: 'none', color: 'black'}}>
-                            <div className={classes.board__wrapper__item__task__textTask}>
+                            <div className={classes.board__wrapper__item__task__textTask} style={decorText}>
                                 {item.textTask}
                             </div>
                         </Link>

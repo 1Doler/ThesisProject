@@ -30,7 +30,8 @@ export default class Tasks extends Component{
             const bgcolor = item._id===id ? {backgroundColor: '#f5e3e3', borderLeft: '3px solid red',fontWeight: 'bold'} : null;
 
             const textsl = item.textTask.length>60 ? item.textTask.slice(0,60)+'...' : item.textTask;
-
+            const exec = JSON.parse(localStorage.getItem('executor'))
+            const ind = exec.findIndex(elem => elem._id === item.author);
             return (
                 <div className={classes.tasks__wrapper__item} style={bgcolor}>
                     <div className={classes.tasks__wrapper__item__ml}>
@@ -40,7 +41,7 @@ export default class Tasks extends Component{
                                 - {textsl}
                             </div>
                             <div className={classes.tasks__wrapper__item__author}>
-                                By: {item.author}
+                                By: {exec[ind] ? exec[ind].lastName +' '+exec[ind].firstName: ''}
                                 <i className="fas fa-exclamation-triangle" style={color_priority}></i>
                             </div>
                     </Link>
