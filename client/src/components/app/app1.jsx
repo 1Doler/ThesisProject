@@ -288,7 +288,7 @@ const App = () =>{
                 <Route path='/users' exact>
                     <Users 
                         boardData={boardData}
-                        boardId={boardId}
+                        boardId={localStorage.getItem('boardId')}
                         addExecutor={addExecutor}
                         getExecutor={getExecutor}
                         executor={executor}
