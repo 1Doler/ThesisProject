@@ -27,6 +27,14 @@ export default class Task extends Component{
             if(moment(item.dueDate).isBefore(moment()) && item.completionPercentage !=100)
                 overdue_task.push(item)
         })
+        let all_perc = 0, cls=0;
+        task.map(item=>{
+            all_perc += item.completionPercentage;
+            if(item.completionPercentage===100)
+                cls++;
+            
+        })
+        all_perc /= task.length
         this.state = {
             task,
             status: {},
@@ -34,7 +42,10 @@ export default class Task extends Component{
             overdue_task,
             current_status: 'All',
             executor_task: task,
-            current_executor: ''
+            current_executor: '',
+            all_perc,
+            cls,
+            percentage: 100
         }
     }
     componentDidMount = () =>{
@@ -66,15 +77,29 @@ export default class Task extends Component{
         })
         this.setState({status_task: st})
     }
-    mapStatusTask = (status) =>{
+    mapStatusTask = (status, percentage=false) =>{
         return status.map(item =>{
-            return(
-                <div className={classes.item}>
-                    <Link onClick={()=>localStorage.setItem('tableId', item.tableId)} to={`/task/${item._id}`} className={classes.textTask}>
-                        {item.textTask}
-                    </Link>
-                </div>
-            )
+            if(percentage){
+                if(item.completionPercentage == this.state.percentage)
+                {
+                    return(
+                        <div className={classes.item}>
+                            <Link onClick={()=>localStorage.setItem('tableId', item.tableId)} to={`/task/${item._id}`} className={classes.textTask}>
+                                {item.textTask} {percentage? `- ${item.completionPercentage}%`: null}
+                            </Link>
+                        </div>
+                    )
+                }
+            }
+            else{
+                return(
+                    <div className={classes.item}>
+                        <Link onClick={()=>localStorage.setItem('tableId', item.tableId)} to={`/task/${item._id}`} className={classes.textTask}>
+                            {item.textTask} {percentage? `- ${item.completionPercentage}%`: null}
+                        </Link>
+                    </div>
+                )
+            }
         })
     }
     mapStatus = () =>{
@@ -137,7 +162,7 @@ export default class Task extends Component{
     }
 
     render(){
-        const {executor_task, status_task,current_executor} = this.state
+        const {executor_task,cls,task, status_task,current_executor,all_perc,percentage} = this.state
         return(
             <div style={{display: 'flex'}}>
                 <Nav />
@@ -157,7 +182,36 @@ export default class Task extends Component{
                             <div className={classes.item}>
                                 Create date: date
                             </div>
+                            <div className={classes.item} style={{border: 'none'}}>
+                                Completion Percentage: {Math.round(all_perc)}%
+                                <div style={{display: 'flex', alignItems: 'flex-end'}}>
+                                    <div style={{marginRight: '10px'}}>{cls}</div> 
+                                    <div className="myProgress" style={{width: '20%', backgroundColor: 'grey', height: '15px', marginTop: '5px'}}>
+                                         <div className="myBar" style={{width: all_perc+'%',height: '15px', backgroundColor: '#81bb7c'}}></div>
+                                    </div>
+                                    {task.length-cls}
+                                </div>
+                            </div>
                             
+                        </div>
+                    </div>
+                    <div className={classes.taskPercentage}>
+                        <h3>Task Progress Chart</h3>
+                        <select value={percentage} onChange={(e)=>this.setState({percentage: e.target.value})}>
+                            <option value='0'>0</option>
+                            <option value='10'>10</option>
+                            <option value='20'>20</option>
+                            <option value='30'>30</option>
+                            <option value='40'>40</option>
+                            <option value='50'>50</option>
+                            <option value='60'>60</option>
+                            <option value='70'>70</option>
+                            <option value='80'>80</option>
+                            <option value='90'>90</option>
+                            <option value='100'>100</option>
+                        </select>
+                        <div className={classes.wrapper}>
+                            {this.mapStatusTask(task,true)}
                         </div>
                     </div>
                     <div className={classes.fullStatus}>

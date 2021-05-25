@@ -29,7 +29,8 @@ export default class Board extends Component{
 
 
     delTable = (id) =>{
-        this.props.deleteTaskList(id);
+        if(window.confirm('Вы действительно хотите удалить эту таблицу?'))
+            this.props.deleteTaskList(id);
     }
     
     onChange = (e) =>{
@@ -87,6 +88,8 @@ export default class Board extends Component{
                     {
                         colorDate.color = 'red';
                     }
+                    if(item.completionPercentage===100)
+                        colorDate.color = 'orange';
                 }
                 let exec;
                 const localStorageExec = localStorage.getItem('executor')
@@ -159,7 +162,7 @@ export default class Board extends Component{
                         <div className={classes.board__wrapper__item__task__dueDate} style={colorDate}>
                             {item.dueDate ? moment(item.dueDate).format('DD.MM.YYYY') : null}
                         </div> 
-                        <div className={classes.deleteTask} onClick={()=>this.props.deleteTask(id,item._id)}>Delete task</div>
+                        <div className={classes.deleteTask} onClick={()=>window.confirm('Вы действительно хотите удалить эту запись?') ? this.props.deleteTask(id,item._id):null}>Delete task</div>
                     </div>
                 )
             })
