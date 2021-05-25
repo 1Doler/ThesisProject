@@ -30,7 +30,7 @@ export default class Board extends Component{
                         <div className={classes.role}>
                             {role}
                         </div>
-                        <div className={classes.btnDelete} style={disNone} onClick={()=>this.props.deleteExecutor(_id)}>
+                        <div className={classes.btnDelete} style={disNone} onClick={()=>window.confirm('Вы действительно хотите удалить этого пользователя?') ? this.props.deleteExecutor(_id) : null}>
                             Delete
                         </div>
                     </div>
