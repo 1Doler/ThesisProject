@@ -31,7 +31,7 @@ export default class Board extends Component{
                             {role}
                         </div>
                         <div className={classes.btnDelete} style={disNone} onClick={()=>window.confirm('Вы действительно хотите удалить этого пользователя?') ? this.props.deleteExecutor(_id) : null}>
-                            Delete
+                            Удалить
                         </div>
                     </div>
                 )
@@ -45,8 +45,8 @@ export default class Board extends Component{
                 <Nav />
                 <div className={classes.users}>
                     <div className={classes.head}>
-                        <h2>Page Users</h2>
-                        <button className={classes.btnAdd} onClick={()=>this.setState({active: true})}>AddUser</button>
+                        <h2>Исполнители</h2>
+                        <button className={classes.btnAdd} onClick={()=>this.setState({active: true})}>Добавить исполнителя</button>
                     </div>
                     <Modal 
                         active={this.state.active} 

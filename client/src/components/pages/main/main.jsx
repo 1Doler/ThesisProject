@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 
 import logo from '../../../assets/img/log.svg'
+import imgSec from './data-storage.svg'
 
 import classes from './main.module.sass'
+import './main.media.sass'
 
 export default class Board extends Component{
     constructor(){
@@ -10,14 +12,17 @@ export default class Board extends Component{
         this.state={
             activeModal: false,
             email: 'Doler@gmail.com',
-            password: 'password1'
+            password: 'password1',
+            auth: true,
+            lastName: '',
+            firstName: ''
         }
     }
     setValue = (e) =>{
         this.setState({[e.target.name]: e.target.value});
     }
     render(){
-        const { activeModal, email, password } = this.state;
+        const { activeModal, email, password,lastName,firstName } = this.state;
         const { logIn, reg} = this.props;
         const inpStyle = {
             padding: '10px',
@@ -26,6 +31,15 @@ export default class Board extends Component{
             fontSize: '15px'
         }
         const isVis = activeModal ? { transform: 'scale(1)' } : { transform: 'scale(0)' }
+        const r = (
+            <>
+                <div className={classes.main__auth__inp__log}>
+                    <input style={inpStyle} value={lastName} name='lastName' placeholder='Имя' onChange={(e)=>this.setValue(e)}></input>
+                </div>
+                <div className={classes.main__auth__inp__pas}>
+                    <input style={inpStyle} value={firstName} name='firstName' placeholder='Фамилия' onChange={(e)=>this.setValue(e)}></input>
+                </div>
+            </>)
         return(
             <div className={classes.main}>
                 <div className={classes.main__modal}  style={isVis}>
@@ -34,16 +48,25 @@ export default class Board extends Component{
                             Авторизация
                             <i className="fas fa-times" onClick={()=>this.setState({activeModal: false})}></i>
                         </div>
+                        <div className={classes.lr}>
+                            <button style={{marginRight: '5px'}} onClick={()=>this.setState({auth: true})}>
+                                Войти
+                            </button>
+                            <button onClick={()=>this.setState({auth: false})}>
+                                Регистрироваться 
+                            </button>
+                        </div>
                         <div className={classes.main__auth__inp}>
+                            
                             <div className={classes.main__auth__inp__log}>
                                 <input style={inpStyle} value={email} name='email' placeholder='Email' onChange={(e)=>this.setValue(e)}></input>
                             </div>
                             <div className={classes.main__auth__inp__pas}>
                                 <input style={inpStyle} value={password} name='password' placeholder='Password' onChange={(e)=>this.setValue(e)}></input>
                             </div>
+                            {!this.state.auth ? r : null}
                             <div className={classes.main__auth__inp__btn}>
-                                <button className={classes.main__auth__inp__btn__log} onClick={()=>logIn(email, password)}>Войти</button>
-                                <button className={classes.main__auth__inp__btn__reg}  onClick={()=>{reg(email, password)}}>Регистрация</button>
+                                {this.state.auth?<button className={classes.main__auth__inp__btn__log} onClick={()=>logIn(email, password)}>Войти</button>:<button className={classes.main__auth__inp__btn__reg}  onClick={()=>{reg(email, password)}}>Регистрация</button>}
                             </div>
                         </div>
                     </div>
@@ -74,8 +97,8 @@ export default class Board extends Component{
                         <img src='https://image.freepik.com/free-vector/business-team-discussing-ideas-startup_74855-4380.jpg' alt='img'/>
                     </div>
                     <div className={classes.main__pminfo__wh}>
-                        <div className={classes.container} style={{display: 'flex', justifyContent: 'space-between'}}>
-                            <img src='https://luna1.co/03f8cc.png' alt='img'/>
+                        <div className={classes.container} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                            <img src={imgSec} alt='img'/>
                             <div>
                                 <div className={classes.main__pminfo__wh__title}>
                                     Зачем оно вам?

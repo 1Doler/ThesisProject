@@ -1,13 +1,15 @@
+//Поключение инструментов для работы с сервером
 const {Router} = require('express')
 const {check, validationResult} = require('express-validator')
 const config = require('config')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-
+//Имортирование моделей коллекции MongoDB
 const Table = require('../models/Table')
 const Board = require('../models/Board')
 
 const router = Router()
+//Запрос на добавление TaskList
 router.post('/addtasklist', async (req, res)=>{
     try{
         const data = req.body;
@@ -19,7 +21,7 @@ router.post('/addtasklist', async (req, res)=>{
         res.status(400).json({message: 'Ошибочка'})
     }
 })
-
+//Запрос на удаление TaskList
 router.post('/deletetasklist', async (req, res)=>{
     try{
         const result = await Table.deleteOne({_id: req.body.id});
@@ -28,9 +30,11 @@ router.post('/deletetasklist', async (req, res)=>{
         res.status(400).json({message: 'Ошибочка'})
     }
 })
+//Запрос на изменение данных о задаче
 router.post('/updatetask', async (req, res)=>{
     try{
         const data = req.body;
+        //Данные которые ввёл пользователь
         const {_id, tblId, description, text, status, performer, startDate, priority, duration, completionPercentage, dueDate} = data;
         await Table.find({'_id': tblId,
         'task._id': _id,});
@@ -57,6 +61,7 @@ router.post('/updatetask', async (req, res)=>{
         res.status(400).json({message: 'Ошибочка'})
     }
 })
+//Запрос на добавление задачи
 router.post('/addtask', async (req, res)=>{
     try{
         const data = req.body;
@@ -83,6 +88,7 @@ router.post('/addtask', async (req, res)=>{
         res.status(400).json({message: 'Ошибочка'})
     }
 })
+//Запрос на удаление исполнителя
 router.post('/deleteexecutor', async (req, res)=>{
     try{
         const {userId, boardId} = req.body;
@@ -93,7 +99,6 @@ router.post('/deleteexecutor', async (req, res)=>{
             }
         }
         );
-
         const delExecTask = await Table.updateMany(
             {boardId: boardId, 'task.performer':userId},
             {$set: {
@@ -105,6 +110,8 @@ router.post('/deleteexecutor', async (req, res)=>{
         res.status(400).json({message: 'Ошибочка'})
     }
 })
+
+//Запрос на удаление задачи
 router.post('/deletetask', async (req,res)=>{
     const {tableId, taskId} = req.body;
         const result = await Table.updateOne({_id: tableId}, 

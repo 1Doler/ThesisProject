@@ -50,10 +50,10 @@ export default class Projects extends Component{
         return(
             <div className={classes.modal}>
                 <div className={classes.addTask__content}>
-                        <h3>Create new project</h3>
+                        <h3>Создать проект</h3>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Name project:
+                                Название проекта:
                             </div>
                             <input 
                                 className={classes.inp} 
@@ -65,7 +65,7 @@ export default class Projects extends Component{
                         </div>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Description: 
+                                Описание: 
                             </div>
                             <input 
                                 className={classes.inp} 
@@ -77,7 +77,7 @@ export default class Projects extends Component{
                         </div>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Select priority: 
+                                Статус: 
                             </div>
                             <select 
                                 className={classes.inp}
@@ -92,13 +92,13 @@ export default class Projects extends Component{
                             className={classes.addTask__content__buttonAdd}
                             onClick={()=>this.onClickBtn(nameBoard, descr, status)}
                         >
-                            ADD
+                            Добавить
                         </div>
                         <div 
                             className={classes.addTask__content__buttonCancel}
                             onClick={()=>this.setState({active_modal: false})}
                         >
-                            CANCEL
+                            Отменить
                         </div>
                     </div>
             </div>
@@ -143,10 +143,10 @@ export default class Projects extends Component{
                         </Alert>
                     </Snackbar>
                     <div className={classes.board}>
-                        <h2>Page Projects</h2>
+                        <h2>Проекты</h2>
                         <Search Submit={onSearch}/>
                         <button onClick={()=>this.setState({active_modal: true})} className={classes.board__btn}>
-                            Create new project
+                            Добавить проект
                         </button>
                         <ProjectItem data={vs} onToggleImportant={onToggleImportant}/>
                     </div>

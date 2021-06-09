@@ -119,7 +119,7 @@ export default class Task extends Component{
             )
         }
         arr.push(<div className={classes.item} onClick={()=>this.setState({status_task: this.state.task, current_status: 'All'})}>
-                    <div>All:</div> 
+                    <div>Все:</div> 
                     <div>
                         {allCount}
                     </div>
@@ -134,7 +134,7 @@ export default class Task extends Component{
             return(
                 <div className={classes.item}>
                     <Link onClick={()=>localStorage.setItem('tableId', item.tableId)} to={`/task/${item._id}`} className={classes.textTask}>
-                        {item.textTask} - <span style={colorLate}>late by {late} days</span>
+                        {item.textTask} - <span style={colorLate}>просрочено на {late} д.</span>
                     </Link>
                 </div>
             )
@@ -168,22 +168,22 @@ export default class Task extends Component{
                 <Nav />
                 <div className={classes.info} style={{padding: '20px'}}>
                     <div className={classes.boardInfo}>
-                        <h3>Project info</h3>
+                        <h3>Информация о проекте</h3>
                         <div className={classes.wrapper}>
                             <div className={classes.item}>
-                                Name project: NAME
+                                Название проекта: Lorerne
                             </div>
                             <div className={classes.item}>
-                                Author: Author
+                                Автор: Kabilov Daler
                             </div>
                             <div className={classes.item}>
-                                Desctiprion: descr
+                                Описание: descr
                             </div>
                             <div className={classes.item}>
-                                Create date: date
+                                Дата создания: date
                             </div>
                             <div className={classes.item} style={{border: 'none'}}>
-                                Completion Percentage: {Math.round(all_perc)}%
+                                Проецент выполнения: {Math.round(all_perc)}%
                                 <div style={{display: 'flex', alignItems: 'flex-end'}}>
                                     <div style={{marginRight: '10px'}}>{cls}</div> 
                                     <div className="myProgress" style={{width: '20%', backgroundColor: 'grey', height: '15px', marginTop: '5px'}}>
@@ -196,7 +196,7 @@ export default class Task extends Component{
                         </div>
                     </div>
                     <div className={classes.taskPercentage}>
-                        <h3>Task Progress Chart</h3>
+                        <h3>Процент выполнения задач</h3>
                         <select value={percentage} onChange={(e)=>this.setState({percentage: e.target.value})}>
                             <option value='0'>0</option>
                             <option value='10'>10</option>
@@ -216,31 +216,31 @@ export default class Task extends Component{
                     </div>
                     <div className={classes.fullStatus}>
                         <div className={classes.status}>
-                            <h3>Task status</h3>
+                            <h3>Статусы задач</h3>
                             <div className={classes.wrapper}>
                                 {this.mapStatus()}
                             </div>
                         </div>
                         <div className={classes.statusTask}>
-                            <h3>Task ({this.state.current_status})</h3>
+                            <h3>Задача ({this.state.current_status})</h3>
                             <div className={classes.wrapper}>
                                 {this.mapStatusTask(status_task)}
                             </div>
                         </div>
                     </div>
                     <div className={classes.overdue}>
-                        <h3>Overdue work item </h3>
+                        <h3>Просроченные задачи</h3>
                         <div className={classes.wrapper}>
                             {this.mapOverdue()}
                         </div>
                     </div>
                     <div className={classes.fullStatus}>
                         <div className={classes.status}>
-                            <h3>Executor</h3>
+                            <h3>Исполнители</h3>
                             <div className={classes.wrapper}>
                                 {this.mapExecutor()}
                                 <div className={classes.item} onClick={()=>this.setExecutor(' ','Not executor')}>
-                                    Not executor
+                                    Без исполнителя
                                 </div>
                             </div>
                         </div>

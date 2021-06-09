@@ -59,16 +59,16 @@ export default class BoardItem extends Component{
                     <tbody>
                         <tr key={'head'}>
                             <th><i className="fas fa-star"></i></th>
-                            <th>PROJECT NAME</th>
-                            <th>OWNER</th>
-                            <th>DESCRIPTION</th>
-                            <th>Status</th>
-                            <th>BTN</th>
+                            <th>Название проекта</th>
+                            <th>Владелец</th>
+                            <th>Описание</th>
+                            <th>Статус</th>
+                            <th></th>
                         </tr>
                         {boards}
                     </tbody>
                 </table>
-                {boards===undefined?<h2 style={{textAlign: 'center'}}>NOT DATA</h2>:null}
+                {boards===undefined?<h2 style={{textAlign: 'center'}}>Отсуствуют проекты</h2>:null}
             </>
         )
     }

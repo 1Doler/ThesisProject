@@ -19,7 +19,7 @@ export default class Modal extends Component{
             setActive();
         }
         else
-            alert('Заполните поле "TaskList"')
+            alert('Заполните поле Name "TaskList"')
     }
     render(){
         const { active, setActive } = this.props
@@ -27,14 +27,14 @@ export default class Modal extends Component{
                 <div className={active ? classes.active : classes.modal}>
                     <div className={classes.modal__content}>
                         <div className={classes.modal__content__title}>
-                            New Task List
+                            Создать "TaskList"
                         </div>
                         <div className={classes.modal__content__nameTask}>
-                            <p>TaskList</p>
+                            <p>Название "TaskList"</p>
                             <input value={this.state.nameTask} onChange={(e)=>this.setState({nameTask: e.target.value})}/>
                         </div>
-                        <button className={classes.modal__content__buttonAdd} onClick={()=>this.onClick()}>ADD</button><br/>
-                        <button className={classes.modal__content__buttonCancel} onClick={()=>setActive()}>CANCEL</button>
+                        <button className={classes.modal__content__buttonAdd} onClick={()=>this.onClick()}>Добавить</button><br/>
+                        <button className={classes.modal__content__buttonCancel} onClick={()=>setActive()}>Отменить</button>
                     </div>
                 </div>
             )

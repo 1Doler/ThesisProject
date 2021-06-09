@@ -19,11 +19,11 @@ export default class AddTaksList extends Component{
                 
                 <img src='https://img.zohocdn.com/projects/images/svg/kbn-tasklist_a2e38_.svg' alt='img'/>
                 <p>
-                    No task lists yet<br/>
-                    Task lists help you group a set of tasks together.
+                    Отсуствует "TaskList"<br/>
+                    Списки задач помогают сгруппировать набор задач вместе.
                 </p>
                 
-                <button className={classes.taskList__button} onClick={()=>this.setState({active_modal: true})}>Create a Task List</button>
+                <button className={classes.taskList__button} onClick={()=>this.setState({active_modal: true})}>Добавить "TaskList"</button>
                 <Modal 
                     active={this.state.active_modal} 
                     setActive={()=>(this.setState({active_modal: false}))}

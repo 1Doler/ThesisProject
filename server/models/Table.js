@@ -1,6 +1,5 @@
 const {Schema, model, Types} = require('mongoose')
 
-
 const Table = new Schema({
     boardId: {type: Types.ObjectId, ref: 'Boards'},
     nameTable: {type: String},

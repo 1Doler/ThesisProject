@@ -21,7 +21,7 @@ $hovercolor: rgb(243, 224, 224)
             background-color: $hovercolor
             
 @mixin inp()
-    width: 100%
+    
     outline: none
     border: none
     background-color: $bgcolortask
@@ -83,7 +83,6 @@ $hovercolor: rgb(243, 224, 224)
             select
                 @include inp
                 background-color: white
-                width: 140px
                 font-size: 16px
                 margin-bottom: 5px
             span
@@ -100,7 +99,6 @@ $hovercolor: rgb(243, 224, 224)
                     cursor: pointer
             &__text
                 textarea
-                    width: 100%
                     border: none
                     margin-top: 5px
                     font-size: 16px
@@ -115,7 +113,6 @@ $hovercolor: rgb(243, 224, 224)
                 margin-top: 10px
             .box
                 input, select
-                    width: 100%
                     border: none
                     padding: 4px
             &__wrapper

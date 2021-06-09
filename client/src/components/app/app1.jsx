@@ -1,8 +1,9 @@
+//Подключение библиотек и инструментов для работы с REACT 
 import { Route, BrowserRouter as Router } from "react-router-dom"
 import React, { useState,useEffect } from 'react'
 import {useHttp} from '../hooks/http.hook'
 
-
+//Импортирование компонентов сайта
 import InfoBoard from '../pages/info_board/info_board'
 import Projects from '../pages/projects/projects'
 import Board from '../pages/board/board'
@@ -10,6 +11,7 @@ import Users from '../pages/users/users'
 import Main from '../pages/main/main'
 import Task from '../pages/task/task'
 
+//Импортирование sass стилей
 import classes from './app.module.sass'
 
 const App = () =>{
@@ -20,7 +22,7 @@ const App = () =>{
     const [userId, setUserId] = useState(null)
     const [executor, setExecutor] = useState(null)
 
-    ////getBoardDate
+    //Запрос на получение информации о проектах 
     const fetchData1 = async () =>{
         try{
             const localStorageRef = localStorage.getItem('userId')
@@ -45,7 +47,7 @@ const App = () =>{
         fetchData1();
     }, []);
 
-
+    //Запрос на получение информации о таблицах
     useEffect(async () =>{
         try{
             const data = await request('/api/auth/table', 'GET');
@@ -60,6 +62,9 @@ const App = () =>{
     useEffect(()=>{
         getExecutor();
     },[boardId])
+
+
+    //Запрос на получение информации о исполнителях
     const getExecutor = async () =>{
         if(boardData){
             const executorId = [];
@@ -95,7 +100,7 @@ const App = () =>{
         }
     },[userId]);
 
-    ///auth requiset
+    //Запрос на проверку логина и пароля
     const logIn = async (email, password) =>{
         try{
             const res = await request('/api/auth/login', 'POST', {email, password})
@@ -109,6 +114,8 @@ const App = () =>{
             console.log('Error app');
         }
     }
+
+    //Запрос на регистрацию
     const reg = async (email, password) =>{
         try{
             const res = await request('/api/auth/register', 'POST', {email, password})
@@ -118,7 +125,7 @@ const App = () =>{
         }
     }
 
-    
+    //Запрос на создания нового проекта
     const addBoard = async (nameBoard, descr, status) =>{
         try{
             const lsUserId = JSON.parse(localStorage.getItem('userId'))
@@ -129,7 +136,7 @@ const App = () =>{
         }
     }
     
-   
+   //Запрос на измененине проекта
     const onToggleImportant = async (_id) =>{
         try{
             const index = boardData.findIndex(elem => elem._id === _id)
@@ -145,7 +152,7 @@ const App = () =>{
         }
     }
 
-
+    //Запрос на добаление TaskList
     const addTaskList = async (board_id, nameTaskList) =>{
         try{
             await request('/api/auth/addtasklist', 'POST', {board_id, nameTaskList});
@@ -158,6 +165,7 @@ const App = () =>{
             console.log('Error app')
         }
     }
+    //Запрос на удаление TaskList
     const deleteTaskList = async (id) =>{
         try{
             await request('/api/auth/deletetasklist', 'POST', {id})
@@ -170,6 +178,7 @@ const App = () =>{
             console.log('ERROR DelteTaskList');
         }
     }
+    //Запрос на изменение TaskList
     const updateTable = async (state) =>{
         try{
             const {completionPercentage, status} = state;
@@ -182,7 +191,7 @@ const App = () =>{
             alert('Error app')
         }
     }
-
+    //Запрос на добаление задачи
     const addTask = async (info) =>{
         const res = await request('/api/auth/addtask', 'POST', info);
         const data1 = await request('/api/auth/table', 'GET');
@@ -191,15 +200,14 @@ const App = () =>{
         window.location.reload();
         
     }
+    //Запрос на удаление задачи
     const deleteTask = async (tableId, taskId) =>{
         await request('/api/auth/deletetask', 'POST', {tableId,taskId});
         const data1 = await request('/api/auth/table', 'GET');
         localStorage.setItem('table', JSON.stringify(data1));
         window.location.reload();
     }
-    
-
-
+    //Запрос на добаление исполнителя 
     const addExecutor = async (executors) =>{
         try{
             const res = await request('/api/auth/addexecutor', 'POST', executors);
@@ -224,7 +232,6 @@ const App = () =>{
                             
                         }
                     })
-                    
                     const res1 = await request('/api/auth/getexecutor', 'POST', {executorId});
                     res1.map(item=>{
                         b[0].executor.map(elem=>{
@@ -244,6 +251,7 @@ const App = () =>{
             alert('Не удалось добавить исполнителя')
         }
     }
+    //Запрос на удаление исполнителя
     const deleteExecutor = async (userId) =>{
         const res = await request('/api/auth/deleteexecutor', 'POST', {boardId, userId});
         const localStorageExec = JSON.parse(localStorage.getItem('executor'));
@@ -254,19 +262,21 @@ const App = () =>{
     } 
 
     
-
+    //Получение данных из localStorage
     const localStorageId = localStorage.getItem('userId')
     const localStorageTable = JSON.parse(localStorage.getItem('table'))
     const localStorageBoardId = localStorage.getItem('boardId')
     return(
         <Router>
             <div className={classes.app}>
+                {/* Переадресация на главную страницу*/}
                 <Route path='/' exact>
                     <Main 
                         logIn={logIn}
                         reg={reg}
                     />
                 </Route>
+                {/* Переадресация на страницу с проектами*/}
                 <Route path='/board/' exact>
                     <>
                         <Projects 
@@ -277,12 +287,14 @@ const App = () =>{
                     </>
                     
                 </Route>
+                {/* Переадресация на страницу с информацие о проекте */}
                 <Route path='/info' exact>
                     <InfoBoard 
                         table={localStorageTable}
                         boardId={localStorageBoardId}
                     />                    
                 </Route>
+                {/* Переадресация на страницу с проектом */}
                 <Route path='/board/:id' render={
                     ({match}) => {
                         setBoardId(localStorage.getItem('boardId'))
@@ -298,6 +310,7 @@ const App = () =>{
                         />
                     }
                 }/>
+                {/* Переадресация на страницу с исполнителями */}
                 <Route path='/users' exact>
                     <Users 
                         boardData={boardData}
@@ -308,6 +321,7 @@ const App = () =>{
                         deleteExecutor={deleteExecutor}
                         />
                 </Route>
+                {/* Переадресация на страницу с задачами */}
                 <Route path='/task/:id' render={
                     ({match}) => {
                         const {id} = match.params;
