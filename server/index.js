@@ -30,5 +30,4 @@ const start = async () => {
         console.log('Сервер не был запущен. Произошла ошибка!!!')
     }
 }
-
 start();
