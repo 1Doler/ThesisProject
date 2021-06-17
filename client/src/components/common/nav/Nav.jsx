@@ -13,9 +13,10 @@ export default class Nav extends Component{
 
 
     render(){
+        const {updateProfile} = this.props;
         return(
             <div className={classes.nav}>
-                <Modal active={this.state.active} close={()=>this.setState({active: false})}/>
+                <Modal active={this.state.active} updateProfile={updateProfile} close={()=>this.setState({active: false})}/>
                 <div className={classes.top}>
                     <div className={classes.nav__logo}>
                         <i className="fas fa-clipboard-list"></i>
@@ -33,7 +34,7 @@ export default class Nav extends Component{
                         </li>
                         <li className={classes.nav__item__projects}>
                             <i className="fas fa-briefcase"></i>
-                            <Link to='/board'>Поекты</Link>
+                            <Link to='/board'>Проекты</Link>
                         </li>
                     </ul>
                 </div>

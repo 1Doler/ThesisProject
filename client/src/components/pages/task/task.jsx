@@ -104,28 +104,34 @@ export default class Task extends Component{
             this.multilineTextarea.style.height = '39px';
         }
     }
-    
+    uTask = (_id, tblId, description, text,status,performer,dueDate,startDate,priority, duration,completionPercentage) =>{
+        const role = localStorage.getItem('role');
+        const userId = JSON.parse(localStorage.getItem('userId'));
+        if((role === 'Admin' || role === 'Manager') || (role==='Performer' && userId==performer))
+        {
+            this.props.updateTable({_id, tblId, description, text,status,performer,dueDate,startDate,priority, duration,completionPercentage}) 
+        }
+        else 
+            alert('У вас недостатоно прав!')
+    }
     render(){
         const {filt, text, description, author,status,performer,dueDate,startDate,priority, duration,completionPercentage,_id} = this.state;
         
         const optionStatus = [
             <option value=""></option>,
-            <option value="Ready">Ready</option>,
-            <option value="Open">Open</option>,
-            <option value="Status">Status</option>,
-            <option value="In Progress">In Progress</option>,
-            <option value="In Review">In Review</option>,
-            <option value="To Be Tested">To Be Tested</option>,
-            <option value="On Hold">On Hold</option>,
-            <option value="Delayed">Delayed</option>,
-            <option value="Cancalled">Cancalled</option>,
-            <option value="Closed" disabled>Closed</option>
+            <option value="Open">Открыто</option>,
+            <option value="In Progress">В ходе выполнения</option>,
+            <option value="In Review">В обзоре</option>,
+            <option value="To Be Tested">В тестировании</option>,
+            <option value="On Hold">Задержано</option>,
+            <option value="Cancalled">Отменено</option>,
+            <option value="Closed" disabled>Выполнено</option>
         ];
         const optionPriority = [
             <option value="None">None</option>,
-            <option value="Hight">Hight</option>,
-            <option value="Low">Low</option>,
-            <option value="Medium">Medium</option>,
+            <option value="Hight">Высокий</option>,
+            <option value="Low">Низкий</option>,
+            <option value="Medium">Средний</option>,
         ];
         let optionExec = [];
         
@@ -247,7 +253,7 @@ export default class Task extends Component{
                     <Button 
                         variant="contained" 
                         color="secondary" 
-                        onClick={()=>this.props.updateTable({_id, tblId, description, text,status,performer,dueDate,startDate,priority, duration,completionPercentage})}
+                        onClick={()=>this.uTask(_id, tblId, description, text,status,performer,dueDate,startDate,priority, duration,completionPercentage)}
                     >
                         Сохранить
                     </Button>

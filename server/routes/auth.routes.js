@@ -93,6 +93,22 @@ router.post(
         res.status(500).json({message: "Erro"})
     }
 })
-
+router.post('/updateprofile', async (req, res)=>{
+    try{
+        const {userId, firstName, lastName} = req.body;
+        const result = await User.updateOne(
+            {   
+                '_id': userId
+            },
+            {
+                firstName,
+                lastName
+            }    
+        )
+        res.status(200).json({message: result});
+    }catch(e){
+        res.status(400).json({message: 'Ошибочка'})
+    }
+})
 
 module.exports = router

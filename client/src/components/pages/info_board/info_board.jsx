@@ -109,9 +109,36 @@ export default class Task extends Component{
         for (var key in status){
             allCount += status[key];
             const k = key != 'Not status' ? key : '';
+            let status1 = '';
+                switch(k){
+                    case ('Open'):
+                        status1='Открыто';
+                        break;
+                    case ('In Progress'):
+                        status1='В ходе выполнения';
+                        break;
+                    case ('In Review'):
+                        status1='В обзоре';
+                        break;
+                    case ('To Be Tested'):
+                        status1='В тестировании';
+                        break;
+                    case ('On Hold'):
+                        status1='Задержано';
+                        break;
+                    case ('Closed'):
+                        status1='Выполнено';
+                        break;
+                    case ('Cancalled'):
+                        status1='Отменено';
+                        break;
+                    default:
+                        status1='';
+                        break;
+                }
             arr.push(
                 <div className={classes.item} onClick={()=>this.getStatusTask(k)}>
-                    <div>{key}:</div> 
+                    <div>{status1}:</div> 
                     <div>
                         {status[key]}
                     </div>
@@ -160,30 +187,85 @@ export default class Task extends Component{
         })
         this.setState({executor_task, current_executor: fullName})
     }
+    boardInf = () =>{
+        const {boardData} = this.props;
+        const bbii = localStorage.getItem('boardId');
+        
 
+        const ind = boardData.findIndex(item=>item._id===bbii)
+        console.log(ind)
+        
+    }
     render(){
         const {executor_task,cls,task, status_task,current_executor,all_perc,percentage} = this.state
+
+        const {updateProfile,boardData} = this.props;
+        const bbii = localStorage.getItem('boardId');
+        const ind = boardData.findIndex(item=>item._id===bbii)
+        let inf={
+            nameBoard:'',
+            fullName:'',
+            description:'',
+            startDate:''
+        };
+        if(ind>-1)
+        {
+            const {nameBoard,fullName,description,startDate} = boardData[ind]
+            inf = {
+                nameBoard,
+                fullName,
+                description,
+                startDate
+            };
+        }
+        let status1 = '';
+                switch(this.state.current_status){
+                    case ('Open'):
+                        status1='Открыто';
+                        break;
+                    case ('In Progress'):
+                        status1='В ходе выполнения';
+                        break;
+                    case ('In Review'):
+                        status1='В обзоре';
+                        break;
+                    case ('To Be Tested'):
+                        status1='В тестировании';
+                        break;
+                    case ('On Hold'):
+                        status1='Задержано';
+                        break;
+                    case ('Closed'):
+                        status1='Выполнено';
+                        break;
+                    case ('Cancalled'):
+                        status1='Отменено';
+                        break;
+                    default:
+                        status1='Все';
+                        break;
+                }
         return(
             <div style={{display: 'flex'}}>
-                <Nav />
+                <Nav updateProfile={updateProfile}/>
                 <div className={classes.info} style={{padding: '20px'}}>
                     <div className={classes.boardInfo}>
                         <h3>Информация о проекте</h3>
                         <div className={classes.wrapper}>
                             <div className={classes.item}>
-                                Название проекта: Lorerne
+                                Название проекта: {inf.nameBoard}
                             </div>
                             <div className={classes.item}>
-                                Автор: Kabilov Daler
+                                Автор: {inf.fullName}
                             </div>
                             <div className={classes.item}>
-                                Описание: descr
+                                Описание: {inf.description}
                             </div>
                             <div className={classes.item}>
-                                Дата создания: date
+                                Дата создания: {moment(inf.startDate).format('YYYY-MM-DD')}
                             </div>
                             <div className={classes.item} style={{border: 'none'}}>
-                                Проецент выполнения: {Math.round(all_perc)}%
+                                Процент выполнения: {Math.round(all_perc)}%
                                 <div style={{display: 'flex', alignItems: 'flex-end'}}>
                                     <div style={{marginRight: '10px'}}>{cls}</div> 
                                     <div className="myProgress" style={{width: '20%', backgroundColor: 'grey', height: '15px', marginTop: '5px'}}>
@@ -222,7 +304,7 @@ export default class Task extends Component{
                             </div>
                         </div>
                         <div className={classes.statusTask}>
-                            <h3>Задача ({this.state.current_status})</h3>
+                            <h3>Задача ({status1})</h3>
                             <div className={classes.wrapper}>
                                 {this.mapStatusTask(status_task)}
                             </div>
@@ -239,13 +321,13 @@ export default class Task extends Component{
                             <h3>Исполнители</h3>
                             <div className={classes.wrapper}>
                                 {this.mapExecutor()}
-                                <div className={classes.item} onClick={()=>this.setExecutor(' ','Not executor')}>
+                                <div className={classes.item} onClick={()=>this.setExecutor(' ','Без исполнителя')}>
                                     Без исполнителя
                                 </div>
                             </div>
                         </div>
                         <div className={classes.statusTask}>
-                            <h3>{current_executor !='' ? `Current executor: ${current_executor}` : current_executor}</h3>
+                            <h3>{current_executor !='' ? `Исполнитель: ${current_executor}` : current_executor}</h3>
                             <div className={classes.wrapper}>
                                 {this.mapStatusTask(executor_task)}
                             </div>

@@ -11,8 +11,8 @@ export default class Board extends Component{
         super();
         this.state={
             activeModal: false,
-            email: 'Doler@gmail.com',
-            password: 'password1',
+            email: '',
+            password: '',
             auth: true,
             lastName: '',
             firstName: ''

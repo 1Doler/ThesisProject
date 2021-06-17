@@ -106,4 +106,22 @@ router.post('/addexecutor', async(req,res)=>{
         res.status(400).json({message: 'Ошибочка'})
     }
 })
+router.post('/updateboard', async (req, res)=>{
+    try{
+        const {status,nameBoard,description,_id} = req.body;
+        const result = await Board.updateOne(
+            {   
+                '_id': _id
+            },
+            {
+                nameBoard,
+                status,
+                description
+            }    
+        )
+        res.status(200).json({message: result});
+    }catch(e){
+        res.status(400).json({message: 'Ошибочка'})
+    }
+})
 module.exports = router

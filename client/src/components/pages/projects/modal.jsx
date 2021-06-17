@@ -5,7 +5,19 @@ import classes from './modal.module.sass'
 export default class Modal extends Component{
     
     
-    
+    onClick = () =>{
+        const {close,status,nameBoard,description,_id,updateBoard} = this.props;
+        if(nameBoard.trim()){
+            updateBoard(status,nameBoard,description,_id)
+        }
+        else
+            alert('Не удалось изменить данные из-за не корректные данные');
+        close();
+    }
+
+
+
+
     render(){
         const {active, close,status,nameBoard,description,onSetValue} = this.props;
         
@@ -30,20 +42,18 @@ export default class Modal extends Component{
                             Статус:
                         </div>
                         <select name='status' value={status} onChange={(e)=>{onSetValue(e)}}>
-                            <option value="Acive">Acive</option>,
-                            <option value="Open">Open</option>,
-                            <option value="Plannig">Plannig</option>,
-                            <option value="In Progress">In Progress</option>,
-                            <option value="On Track">On Track</option>,
-                            <option value="In Tested">In Tested</option>,
-                            <option value="On Hold">On Hold</option>,
-                            <option value="Delayed">Delayed</option>,
-                            <option value="Cancalled">Cancalled</option>,
-                            <option value="Ready">Ready</option>
+                            <option value="Acive">Активно</option>,
+                            <option value="Open">Открыто</option>,
+                            <option value="Plannig">Планируется</option>,
+                            <option value="In Progress">В ходе выполнения</option>,
+                            <option value="In Tested">В тестировании</option>,
+                            <option value="Delayed">Задержано</option>,
+                            <option value="Cancalled">Отменено</option>,
+                            <option value="Ready">Готово</option>
                         </select>
                     </div>
                     
-                    <button className={classes.buttonAdd} onClick={()=>this.onClick()}>Добавить</button>
+                    <button className={classes.buttonAdd} onClick={()=>this.onClick()}>Изменить</button>
                     <br/>
                     <button className={classes.buttonCancel} onClick={()=>close()}>Отменить</button>
                 </div>

@@ -17,7 +17,7 @@ export default class Projects extends Component{
             active_modal: false,
             nameBoard: '',
             descr: '',
-            status: 'Active'
+            status: 'Open'
         }
     }
 
@@ -35,16 +35,14 @@ export default class Projects extends Component{
    }
     modal = () =>{
         const optionStatus = [
-            <option value="Acive">Acive</option>,
-            <option value="Open">Open</option>,
-            <option value="Plannig">Plannig</option>,
-            <option value="In Progress">In Progress</option>,
-            <option value="On Track">On Track</option>,
-            <option value="In Tested">In Tested</option>,
-            <option value="On Hold">On Hold</option>,
-            <option value="Delayed">Delayed</option>,
-            <option value="Cancalled">Cancalled</option>,
-            <option value="Ready">Ready</option>
+            <option value="Acive">Активно</option>,
+            <option value="Open">Открыто</option>,
+            <option value="Plannig">Планируется</option>,
+            <option value="In Progress">В ходе выполнения</option>,
+            <option value="In Tested">В тестировании</option>,
+            <option value="Delayed">Задержано</option>,
+            <option value="Cancalled">Отменено</option>,
+            <option value="Ready">Готово</option>
         ];
         const { nameBoard, descr, status } = this.state;
         return(
@@ -104,8 +102,9 @@ export default class Projects extends Component{
             </div>
         )
     }
+    
     render(){
-        const {board_data, onToggleImportant, deleteBoard} = this.props;
+        const {board_data, onToggleImportant, deleteBoard, updateProfile,updateBoard} = this.props;
         const {search_data} = this.state;
         
         const onSearch = (value,isSearch) =>{
@@ -130,7 +129,7 @@ export default class Projects extends Component{
         const vs = !search_data.length?board_data: search_data;
         return(
             <div className={classes.sectionProjects}>
-                <Nav />
+                <Nav updateProfile={updateProfile}/>
                 <div className={classes.container}>
                     {this.state.active_modal ? this.modal() : null}
                     <Snackbar
@@ -148,7 +147,7 @@ export default class Projects extends Component{
                         <button onClick={()=>this.setState({active_modal: true})} className={classes.board__btn}>
                             Добавить проект
                         </button>
-                        <ProjectItem data={vs} onToggleImportant={onToggleImportant} deleteBoard={deleteBoard}/>
+                        <ProjectItem data={vs} onToggleImportant={onToggleImportant} deleteBoard={deleteBoard} updateBoard={updateBoard}/>
                     </div>
                 </div>
             </div>

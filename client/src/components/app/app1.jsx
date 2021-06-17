@@ -19,8 +19,8 @@ const App = () =>{
     const [boardData,setBoardData] = useState(null);
     const [boardId, setBoardId] = useState(null);
     const [tableId, setTableId] = useState(null);
-    const [userId, setUserId] = useState(null)
-    const [executor, setExecutor] = useState(null)
+    const [userId, setUserId] = useState(null);
+    const [executor, setExecutor] = useState(null);
 
     //Запрос на получение информации о проектах 
     const fetchData1 = async () =>{
@@ -102,14 +102,16 @@ const App = () =>{
             window.location.assign("/board");
         }
     },[userId]);
+
     const deleteBoard = async (id) =>{
+        console.log('fasdfasd')
         try{
-            const res = await request('/api/auth/delboard', 'POST', {id});
-            console.log(res);
+            await request('/api/auth/delboard', 'POST', {id});
             window.location.reload();
         }catch(e){
             console.log('Error');
         }
+        
     }
     //Запрос на проверку логина и пароля
     const logIn = async (email, password) =>{
@@ -142,10 +144,33 @@ const App = () =>{
         {
             try{
                 const res = await request('/api/auth/profile', 'POST', {id})
-                localStorage.setItem('profile', JSON.stringify(res.user))
+                localStorage.setItem('profile', JSON.stringify(res.user));
+
             }catch(e){
             }
         }
+    }
+    const updateProfile = async (firstName, lastName) =>{
+        const localStorageRef = localStorage.getItem('userId')
+        const userId = JSON.parse(localStorageRef);
+        try{
+            await request('/api/auth/updateprofile', 'POST', {userId, firstName, lastName})
+            alert('Вы успешно изменили данные');
+            window.location.reload();
+        }catch(e){
+            alert('Не удалось изменить данные')
+        }
+        
+    }
+    const updateBoard = async (status,nameBoard,description,_id) =>{
+        try{
+            await request('/api/auth/updateboard', 'POST', {status,nameBoard,description,_id})
+            alert('Вы успешно изменили данные');
+            window.location.reload();
+        }catch(e){
+            alert('Не удалось изменить данные')
+        }
+        
     }
     //Запрос на создания нового проекта
     const addBoard = async (nameBoard, descr, status) =>{
@@ -306,6 +331,8 @@ const App = () =>{
                             onToggleImportant = { onToggleImportant }    
                             addBoard = { addBoard }
                             deleteBoard = {deleteBoard}
+                            updateProfile = {updateProfile}
+                            updateBoard = {updateBoard}
                         />
                     </>
                     
@@ -313,8 +340,10 @@ const App = () =>{
                 {/* Переадресация на страницу с информацие о проекте */}
                 <Route path='/info' exact>
                     <InfoBoard 
+                        boardData={boardData ? boardData: []}
                         table={localStorageTable}
                         boardId={localStorageBoardId}
+                        updateProfile= {updateProfile}
                     />                    
                 </Route>
                 {/* Переадресация на страницу с проектом */}
@@ -330,6 +359,7 @@ const App = () =>{
                             deleteTask={deleteTask}
                             userId={JSON.parse(localStorageId)}
                             addTask={addTask}
+                            updateProfile= {updateProfile}
                         />
                     }
                 }/>
@@ -342,6 +372,7 @@ const App = () =>{
                         getExecutor={getExecutor}
                         executor={executor}
                         deleteExecutor={deleteExecutor}
+                        updateProfile= {updateProfile}
                         />
                 </Route>
                 {/* Переадресация на страницу с задачами */}

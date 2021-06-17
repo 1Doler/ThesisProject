@@ -29,8 +29,7 @@ export default class Board extends Component{
     }
     //Функция для удаления таблицы по id
     delTable = (id) =>{
-        if(window.confirm('Вы действительно хотите удалить эту таблицу?'))
-            this.props.deleteTaskList(id);
+        
     }
     //Функция которая меняет значение переменных
     onChange = (e) =>{
@@ -41,6 +40,7 @@ export default class Board extends Component{
     onAddTask = ()=>{
         const { addText, addDescr, addExec,addPriority, tableId} = this.state;
         const {userId} = this.props;
+        
         if(addText.trim())
         {
             this.props.addTask({addText,addDescr,addExec, addPriority, userId, tableId});
@@ -60,10 +60,10 @@ export default class Board extends Component{
                             <div className={classes.board__wrapper__item__btnAdd} style={{display: 'inline-block',textAlign:'right', marginRight: '5px'}}>
                                 <i className="far fa-plus-square" 
                                     style={{display: 'inline-block',textAlign:'right', marginRight: '5px'}}
-                                    onClick={()=>this.setState({active_modalTask: true, tableId: item._id})}
+                                    onClick={()=>this.aTask(item._id)}
                                 />
                             </div>
-                            <div className={classes.board__wrapper__item__btnClose} onClick={()=>{this.delTable(item._id)}}>
+                            <div className={classes.board__wrapper__item__btnClose} onClick={()=>{this.delTaskList(item._id)}}>
                                 <i className={"far fa-window-close"}></i>
                             </div>
 
@@ -76,6 +76,50 @@ export default class Board extends Component{
             )
         })
     }
+    delTask = (id,_id) =>{
+        const role = localStorage.getItem('role');
+        if(role === 'Admin' || role === 'Manager')
+        {
+            if(window.confirm('Вы действительно хотите удалить эту запись?')){
+                this.props.deleteTask(id,_id);
+            }   
+        }
+        else 
+            alert('У вас недостатоно прав!')
+        
+    }
+    delTaskList = (id) =>{
+        const role = localStorage.getItem('role');
+        if(role === 'Admin' || role === 'Manager')
+        {
+            if(window.confirm('Вы действительно хотите удалить эту запись?')){
+                
+                this.props.deleteTaskList(id);
+            }   
+        }
+        else 
+            alert('У вас недостатоно прав!')
+        
+    }
+    aTask = (_id) =>{
+        const role = localStorage.getItem('role');
+        if(role === 'Admin' || role === 'Manager')
+        {
+            this.setState({active_modalTask: true, tableId: _id}) 
+        }
+        else 
+            alert('У вас недостатоно прав!')
+    }
+    aTaskList = (_id) =>{
+        const role = localStorage.getItem('role');
+        if(role === 'Admin' || role === 'Manager')
+        {
+            this.setState({active_modal: true})
+        }
+        else 
+            alert('У вас недостатоно прав!')
+    }
+    
     //Функция которая перебирает массив, в котором хранится информация о задачах
     mapTask = (data,id) =>{
         if(data.length){
@@ -121,14 +165,42 @@ export default class Board extends Component{
                 }
                 // COLOR STATUS 
                 let color_status={};
+                {/* <option value=""></option>,
+                <option value="Open">Открыто</option>,
+                <option value="In Progress">В ходе выполнения</option>,
+                <option value="In Review">В обзоре</option>,
+                <option value="To Be Tested">В тестировании</option>,
+                <option value="On Hold">Задержано</option>,
+                <option value="Cancalled">Отменено</option>,
+                <option value="Closed" disabled>Выполнено</option> */}
+                let status = '';
                 switch(item.status){
-                    case ('Ready'):
+                    case ('Open'):
+                        status='Открыто';
                         color_status={backgroundColor: '#64b5f6'};
                         break;
                     case ('In Progress'):
-                        color_status={backgroundColor: '#ffd54f'};
+                        status='В ходе выполнения';
+                        color_status={backgroundColor: 'lightblue'};
+                        break;
+                    case ('In Review'):
+                        status='В обзоре';
+                        color_status={backgroundColor: 'orange'};
+                        break;
+                    case ('To Be Tested'):
+                        status='В тестировании';
+                        color_status={backgroundColor: 'blue'};
+                        break;
+                    case ('On Hold'):
+                        status='Задержано';
+                        color_status={backgroundColor: 'coral'};
                         break;
                     case ('Closed'):
+                        status='Выполнено';
+                        color_status={backgroundColor: '#99cc60'};
+                        break;
+                    case ('Cancalled'):
+                        status='Отменено';
                         color_status={backgroundColor: 'red'};
                         break;
                     default:
@@ -145,7 +217,7 @@ export default class Board extends Component{
                         </Link>
                         
                         <div className={classes.board__wrapper__item__task__status} style={color_status}>
-                            {item.status}
+                            {status}
                         </div>
                         <hr/>
                         <div className={classes.board__wrapper__item__task__footer}>
@@ -164,7 +236,7 @@ export default class Board extends Component{
                         <div className={classes.board__wrapper__item__task__dueDate} style={colorDate}>
                             {item.dueDate ? moment(item.dueDate).format('DD.MM.YYYY') : null}
                         </div> 
-                        <div className={classes.deleteTask} onClick={()=>window.confirm('Вы действительно хотите удалить эту запись?') ? this.props.deleteTask(id,item._id):null}>Удалить задачу</div>
+                        <div className={classes.deleteTask} onClick={()=>this.delTask(id,item._id)}>Удалить задачу</div>
                     </div>
                 )
             })
@@ -185,7 +257,7 @@ export default class Board extends Component{
 
     render(){
         const { addText, addDescr, addExec,addPriority} = this.state;
-        const {board_id,addTaskList,userId} = this.props;
+        const {board_id,addTaskList,updateProfile} = this.props;
         const localStorageExec = localStorage.getItem('executor');
         let optionExec = [];
         if(JSON.parse(localStorageExec))
@@ -261,10 +333,10 @@ export default class Board extends Component{
                                 value={addPriority}
                                 onChange={(e)=>this.onChange(e)}
                             >
-                                <option value='None'>None</option>
-                                <option value='Low'>Low</option>
-                                <option value='Medium'>Medium</option>
-                                <option value='Hight'>Hight</option>
+                                <option value='None'></option>
+                                <option value='Low'>Низкий</option>
+                                <option value='Medium'>Средний</option>
+                                <option value='Hight'>Высокий</option>
                             </select>
                         </div>
                         <div 
@@ -282,14 +354,14 @@ export default class Board extends Component{
                     </div>
                 </div>
                 {/* Меню */}
-                <Nav />
+                <Nav updateProfile={updateProfile}/>
                 <div className={classes.section__board}>
                     <h2 className={classes.title}>
                         Задачи
                     </h2>
                     <Link to='/users' className={classes.users}>Исполнители</Link>
                     <Link to='/info' className={classes.users}>Отчет</Link>
-                    <button className={classes.board__buttonAddTaskList} onClick={()=>{this.setState({active_modal: true})}}>Добавить "TaskList"</button>
+                    <button className={classes.board__buttonAddTaskList} onClick={()=>this.aTaskList()}>Добавить "TaskList"</button>
                     <div className={classes.board__wrapper}>
                         {visuble}
                     </div>

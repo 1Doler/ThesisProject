@@ -30,7 +30,7 @@ export default class Board extends Component{
                         <div className={classes.role}>
                             {role}
                         </div>
-                        <div className={classes.btnDelete} style={disNone} onClick={()=>window.confirm('Вы действительно хотите удалить этого пользователя?') ? this.props.deleteExecutor(_id) : null}>
+                        <div className={classes.btnDelete} style={disNone} onClick={()=>this.dExecutor(_id)}>
                             Удалить
                         </div>
                     </div>
@@ -38,15 +38,34 @@ export default class Board extends Component{
             })
         }
     }
+    dExecutor = (_id) =>{
+        const role = localStorage.getItem('role');
+        if(role === 'Admin' || role === 'Manager')
+        {
+            if(window.confirm('Вы действительно хотите удалить этого пользователя?'))
+                this.props.deleteExecutor(_id)
+        }
+        else 
+            alert('У вас недостатоно прав!')
+    }
+    aExecutor = () =>{
+        const role = localStorage.getItem('role');
+        if(role === 'Admin' || role === 'Manager')
+        {
+            this.setState({active: true}) 
+        }
+        else 
+            alert('У вас недостатоно прав!')
+    }
     render(){
-        const {addExecutor,boardId} = this.props;
+        const {addExecutor,boardId,updateProfile} = this.props;
         return(
             <div style={{display: 'flex'}}>
-                <Nav />
+                <Nav updateProfile={updateProfile}/>
                 <div className={classes.users}>
                     <div className={classes.head}>
                         <h2>Исполнители</h2>
-                        <button className={classes.btnAdd} onClick={()=>this.setState({active: true})}>Добавить исполнителя</button>
+                        <button className={classes.btnAdd} onClick={()=>this.aExecutor()}>Добавить исполнителя</button>
                     </div>
                     <Modal 
                         active={this.state.active} 
