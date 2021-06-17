@@ -41,3 +41,20 @@ table
         &__text
             text-decoration: none
             color: black
+        
+        &__btn
+            display: grid
+            grid-template-columns: 1fr 1fr
+            align-self: center
+            justify-items: center
+            align-items: center
+            &__btnEdite
+                cursor: pointer 
+                color: #99cc60
+                &:hover
+                    transform: scale(1.4)
+            &__btnDelete
+                cursor: pointer 
+                color: red
+                &:hover
+                    transform: scale(1.4)

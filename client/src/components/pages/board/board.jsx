@@ -41,7 +41,7 @@ export default class Board extends Component{
     onAddTask = ()=>{
         const { addText, addDescr, addExec,addPriority, tableId} = this.state;
         const {userId} = this.props;
-        if(addText)
+        if(addText.trim())
         {
             this.props.addTask({addText,addDescr,addExec, addPriority, userId, tableId});
             this.setState({active_modalTask: false})

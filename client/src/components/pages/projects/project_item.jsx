@@ -1,17 +1,29 @@
 import React, { Component} from 'react'
 import { Link } from 'react-router-dom'
 
+import Modal from './modal'
+
 import classes from './board_item.module.sass'
 
 export default class BoardItem extends Component{
     constructor(){
         super();
-        this.state={}
+        this.state={
+            active: false,
+            nameBoard:'', 
+            description:'', 
+            status:''
+        }
     }
 
-
+    onEdite = (nameBoard,description,status) =>{
+        this.setState({active: true,nameBoard,description,status});
+    }
+    onSetValue = (e) =>{
+        this.setState({[e.target.name]: e.target.value})
+    }
     Item = () =>{
-        const {onToggleImportant, data} = this.props;
+        const {onToggleImportant, data, deleteBoard} = this.props;
         
         const styleIcon = {color: '#99cc60', cursor: 'pointer'};
         const styleLink = {textDecoration: 'none',color: 'black'};
@@ -41,20 +53,36 @@ export default class BoardItem extends Component{
                             {status}
                         </td>
                         <td className={classes.board_item__wrapper__btn}>
-                            <i className="far fa-edit" style={styleIcon}></i>
+                            <div className={classes.board_item__wrapper__btn__btnEdite} onClick={()=>this.onEdite(nameBoard,description,status)}>
+                                <i className="far fa-edit"></i>
+                            </div>
+                            <div className={classes.board_item__wrapper__btn__btnDelete} onClick={()=>{if(window.confirm('Вы действительно хотите удалить этот проект?')){deleteBoard(_id)}}}>
+                                <i className="far fa-window-close"></i>
+                            </div>
                         </td>
                     </tr>
                 )
             }) 
         }
     } 
-    
+    close = () =>{
+        this.setState({active: false})
+    }
 
 
     render(){
+        const {active,nameBoard, description, status} = this.state;
         const boards = this.Item();
         return(
             <>
+                <Modal 
+                    active={active}
+                    nameBoard={nameBoard} 
+                    description={description}
+                    status={status}
+                    close={this.close}    
+                    onSetValue={this.onSetValue}
+                />
                 <table className={classes.board_item}>
                     <tbody>
                         <tr key={'head'}>

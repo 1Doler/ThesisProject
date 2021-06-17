@@ -62,11 +62,11 @@ export default class Board extends Component{
                                 <input style={inpStyle} value={email} name='email' placeholder='Email' onChange={(e)=>this.setValue(e)}></input>
                             </div>
                             <div className={classes.main__auth__inp__pas}>
-                                <input style={inpStyle} value={password} name='password' placeholder='Password' onChange={(e)=>this.setValue(e)}></input>
+                                <input style={inpStyle} value={password} name='password' placeholder='Password' type="password" onChange={(e)=>this.setValue(e)}></input>
                             </div>
                             {!this.state.auth ? r : null}
                             <div className={classes.main__auth__inp__btn}>
-                                {this.state.auth?<button className={classes.main__auth__inp__btn__log} onClick={()=>logIn(email, password)}>Войти</button>:<button className={classes.main__auth__inp__btn__reg}  onClick={()=>{reg(email, password)}}>Регистрация</button>}
+                                {this.state.auth?<button className={classes.main__auth__inp__btn__log} onClick={()=>logIn(email, password)}>Войти</button>:<button className={classes.main__auth__inp__btn__reg}  onClick={()=>{reg(lastName, firstName, email, password)}}>Регистрация</button>}
                             </div>
                         </div>
                     </div>

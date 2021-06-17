@@ -26,7 +26,7 @@ export default class Projects extends Component{
        this.setState({[name]: e.target.value})
    }
    onClickBtn = (nameBoard, descr, status) =>{
-        if(nameBoard){
+        if(nameBoard.trim()){
             this.props.addBoard(nameBoard, descr, status);
             this.setState({active_modal: false})
         }
@@ -105,7 +105,7 @@ export default class Projects extends Component{
         )
     }
     render(){
-        const {board_data, onToggleImportant} = this.props;
+        const {board_data, onToggleImportant, deleteBoard} = this.props;
         const {search_data} = this.state;
         
         const onSearch = (value,isSearch) =>{
@@ -148,7 +148,7 @@ export default class Projects extends Component{
                         <button onClick={()=>this.setState({active_modal: true})} className={classes.board__btn}>
                             Добавить проект
                         </button>
-                        <ProjectItem data={vs} onToggleImportant={onToggleImportant}/>
+                        <ProjectItem data={vs} onToggleImportant={onToggleImportant} deleteBoard={deleteBoard}/>
                     </div>
                 </div>
             </div>

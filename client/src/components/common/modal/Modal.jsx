@@ -13,7 +13,7 @@ export default class Modal extends Component{
     onClick = () =>{
         
         const { setActive, addTaskList, board_id,addTable } = this.props
-        if(this.state.nameTask)
+        if(this.state.nameTask.trim())
         {
             addTaskList(board_id, this.state.nameTask);
             setActive();

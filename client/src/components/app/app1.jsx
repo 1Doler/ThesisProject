@@ -62,6 +62,9 @@ const App = () =>{
     useEffect(()=>{
         getExecutor();
     },[boardId])
+    useEffect(()=>{
+        profile();
+    },[userId])
 
 
     //Запрос на получение информации о исполнителях
@@ -99,7 +102,15 @@ const App = () =>{
             window.location.assign("/board");
         }
     },[userId]);
-
+    const deleteBoard = async (id) =>{
+        try{
+            const res = await request('/api/auth/delboard', 'POST', {id});
+            console.log(res);
+            window.location.reload();
+        }catch(e){
+            console.log('Error');
+        }
+    }
     //Запрос на проверку логина и пароля
     const logIn = async (email, password) =>{
         try{
@@ -111,25 +122,36 @@ const App = () =>{
             else
                 alert('Некорректно ввели пароль/логин')
         }catch(e){
-            console.log('Error app');
+            alert('Вы ввели не правильный логин/пароль')
         }
     }
 
     //Запрос на регистрацию
-    const reg = async (email, password) =>{
+    const reg = async (lastName, firstName, email, password) =>{
         try{
-            const res = await request('/api/auth/register', 'POST', {email, password})
+            await request('/api/auth/register', 'POST', {lastName, firstName, email, password})
             alert('Вы удачно зарегистрировались')
         }catch(e){
             alert(e)
         }
     }
-
+    const profile = async () =>{
+        const localStorageRef = localStorage.getItem('userId')
+        const id = JSON.parse(localStorageRef);
+        if(id)
+        {
+            try{
+                const res = await request('/api/auth/profile', 'POST', {id})
+                localStorage.setItem('profile', JSON.stringify(res.user))
+            }catch(e){
+            }
+        }
+    }
     //Запрос на создания нового проекта
     const addBoard = async (nameBoard, descr, status) =>{
         try{
             const lsUserId = JSON.parse(localStorage.getItem('userId'))
-            const a = await request('/api/auth/addboard', 'POST', {lsUserId, nameBoard, descr, status})
+            await request('/api/auth/addboard', 'POST', {lsUserId, nameBoard, descr, status})
             window.location.reload();
         }catch(e){
             console.log("eerrror")
@@ -183,7 +205,7 @@ const App = () =>{
         try{
             const {completionPercentage, status} = state;
             const st = completionPercentage != 100 ? status : 'Closed'
-            const res = await request('/api/auth/updatetask', 'POST', {...state, status: st});
+            await request('/api/auth/updatetask', 'POST', {...state, status: st});
             const data1 = await request('/api/auth/table', 'GET');
             window.location.reload();
             localStorage.setItem('table', JSON.stringify(data1));
@@ -193,7 +215,7 @@ const App = () =>{
     }
     //Запрос на добаление задачи
     const addTask = async (info) =>{
-        const res = await request('/api/auth/addtask', 'POST', info);
+        await request('/api/auth/addtask', 'POST', info);
         const data1 = await request('/api/auth/table', 'GET');
         
         localStorage.setItem('table', JSON.stringify(data1));
@@ -211,7 +233,7 @@ const App = () =>{
     const addExecutor = async (executors) =>{
         try{
             const res = await request('/api/auth/addexecutor', 'POST', executors);
-            if(res!=0)
+            if(res!==0)
             {
                 const index = boardData.findIndex(elem=>elem._id===boardId)
                 const old = boardData[index];
@@ -253,7 +275,7 @@ const App = () =>{
     }
     //Запрос на удаление исполнителя
     const deleteExecutor = async (userId) =>{
-        const res = await request('/api/auth/deleteexecutor', 'POST', {boardId, userId});
+        await request('/api/auth/deleteexecutor', 'POST', {boardId, userId});
         const localStorageExec = JSON.parse(localStorage.getItem('executor'));
         const ind = localStorageExec.findIndex(elem=>elem._id===userId);
         const newArr=[...localStorageExec.slice(0,ind),...localStorageExec.slice(ind+1)]
@@ -282,7 +304,8 @@ const App = () =>{
                         <Projects 
                             board_data = { boardData ? boardData: [] }
                             onToggleImportant = { onToggleImportant }    
-                            addBoard= { addBoard }
+                            addBoard = { addBoard }
+                            deleteBoard = {deleteBoard}
                         />
                     </>
                     

@@ -155,11 +155,11 @@ export default class Task extends Component{
                         <span>BE2-I1</span>
                     </div>
                     
-                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <div >
+                        <Link to={'/board/'+'tasklist'}><i className="fas fa-window-close" style={{fontSize: '30px',marginTop: '5px'}}></i></Link>
                         <div className={classes.task__text}>
                             <input value={text} type='text' name='text' onChange={(e)=>{this.onChangeInput(e)}}/>
                         </div>
-                        <Link to={'/board/'+'tasklist'}><i className="fas fa-window-close" style={{fontSize: '30px'}}></i></Link>
                     </div>
                     <div className={classes.task__info}>
                         <div className={classes.task__info__author}>
