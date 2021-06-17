@@ -2,8 +2,12 @@ $authcolor: #383946
 $inpbcgcolor: #ebebeb
 $titlecolor: #355a0a
 $textcolor: #1b1e29
+
+$fontSizeTitle: 2em
+$fontSizeText: 1em
+
 @mixin btn()
-    font-size: 14px
+    font-size: $fontSizeText
     padding: 5px
     color: white
     background-color: $authcolor
@@ -19,9 +23,10 @@ $textcolor: #1b1e29
     margin-top: 5px
     input
         padding: 4px
+        font-size: $fontSizeText
 
 .container
-    width: 1140px
+    width: 60vw
     margin: 0 auto
 .main
     background-color: #f6f8f9
@@ -41,14 +46,14 @@ $textcolor: #1b1e29
         padding-top: 90px 
         min-height: 280px
         img
-            width: 250px
+            width: 12em
             position: absolute
-            top: 50px
-            left: 760px
+            top: 5em
+            left: 50vw
             z-index: 1
         &__title
             display: inline-block
-            font-size: 30px
+            font-size: $fontSizeTitle
             font-weight: bold
             color: #90caf9
             i
@@ -59,9 +64,9 @@ $textcolor: #1b1e29
             height: 1px
             background-color: silver
         &__descr
-            width: 500px
+            width: 25vw
             color: #648dae
-            font-size: 15px
+            font-size: $fontSizeText
         &__btn
             @include btn
             font-size: 20px
@@ -71,7 +76,20 @@ $textcolor: #1b1e29
         margin-top: 30px
         width: 300px
         bordre: 1px solid $authcolor
+        transform: scale(2)
+        .lr
+            background-color: $authcolor
+            display: flex
+            justify-content: center
+            button
+                color: white
+                width: 100%
+                background-color: $authcolor
+                border: none
+                &:focus
+                    background-color: #656675
         &__title
+            font-size: $fontSizeTitle
             background-color: $authcolor
             border-top-left-radius: 10px
             border-top-right-radius: 10px
@@ -98,13 +116,9 @@ $textcolor: #1b1e29
                 &__log
                     @include btn
                     border-right: 1px solid white
-                    border-bottom-right-radius: 0
-                    border-top-right-radius: 0
                 &__reg
                     @include btn
                     border-left: 1px solid white
-                    border-bottom-left-radius: 0
-                    border-top-left-radius: 0
     &__pminfo
         background-color: white
         padding: 50px 0
@@ -112,78 +126,99 @@ $textcolor: #1b1e29
             width: 450px
         &__title
             margin-top: 20px
-            font-size: 25px
-            width: 600px
+            font-size: $fontSizeTitle
+            width: 30vw
             color: $textcolor
             font-weight: bold
         &__text
-            width: 600px
+            width: 30vw
             margin-top: 20px
             text-align: left 
-            font-size: 16px
+            font-size: $fontSizeText
             color: #666666
+            padding-bottom: 50px
         &__wh
             background-color: #f6f8f9
-            padding-top: 100px
+            padding: 50px 0
             display: flex
-            justify-content: space-between
+            flex-wrap: wrap
             img
-                width: 500px
+                width: 15vw
                 margin-bottom: 30px
+                margin-right: 50px
             &__title
                 margin-top: 100px
-                font-size: 25px
-                width: 600px
+                font-size: $fontSizeTitle
+                width: 30vw
                 color: $textcolor
                 font-weight: bold
             &__text
-                width: 500px
+                width: 30vw
                 margin-top: 20px
                 text-align: left 
-                font-size: 15px
+                font-size: $fontSizeText
                 color: #666666  
+                
     &__capability
         padding: 10px 0 40px
         background-color: white
         &__title
             color: $textcolor
-            font-size: 25px
+            font-size: $fontSizeTitle
             font-weight: bold
         &__wrapper
             margin-top: 45px
             display: flex
             justify-content: space-between
+            flex-wrap: wrap
             &__item
+                margin-top: 20px
                 width: 250px
                 &__icon
-                    font-size: 35px
+                    font-size: $fontSizeTitle
                 &__title
                     margin-top: 8px
-                    font-size: 16px
+                    font-size: $fontSizeText
                     font-weight: bold
                     color: $textcolor
                 &__descr
                     color: #000000  
                     margin-top: 10px
-                    font-size: 14px
+                    font-size: $fontSizeText
     &__last
         min-height: 260px
         padding: 40px 0
         background: url('./bi.jpg') center (center/cover) no-repeat
         &__title
             color: white
-            font-size: 35px
+            font-size: $fontSizeTitle
             font-weight: bold
             text-align: left
         &__descr
             margin-top: 10px
             width: 500px
             color: white 
-            font-size: 25px
+            font-size: $fontSizeText
             text-align: left
         &__btn
             margin-top: 20px
             @include btn
-            font-size: 25px
+            font-size: $fontSizeText
             border: 2px solid white
             /** background-color: #90caf9 **/
+
+
+@media screen and ( max-width:  1000px)
+    $title: 4em
+    $text: 2.2em
+    .container
+        width: 90vw
+    .main
+        img
+            transform: scale(0.8)
+        .main__header__title
+            font-size: $title
+        .main__header__descr
+            width: 40vw
+            font-size: $text
+        

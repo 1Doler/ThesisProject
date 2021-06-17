@@ -1,3 +1,4 @@
+//Импортирование компонентов для работы с React
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -14,6 +15,7 @@ export default class Board extends Component{
         super(props);
         
         const localStorageRef = localStorage.getItem('table')
+        //Глобальные переменные 
         this.state={
             table_data: JSON.parse(localStorageRef),
             active_modal: false,
@@ -25,22 +27,21 @@ export default class Board extends Component{
             tableId: ''
         }
     }
-    
-
-
+    //Функция для удаления таблицы по id
     delTable = (id) =>{
         if(window.confirm('Вы действительно хотите удалить эту таблицу?'))
             this.props.deleteTaskList(id);
     }
-    
+    //Функция которая меняет значение переменных
     onChange = (e) =>{
         const name = e.target.name;
         this.setState({[name]: e.target.value})
     }
+    //Функция для добавления задачи
     onAddTask = ()=>{
         const { addText, addDescr, addExec,addPriority, tableId} = this.state;
         const {userId} = this.props;
-        if(addText)
+        if(addText.trim())
         {
             this.props.addTask({addText,addDescr,addExec, addPriority, userId, tableId});
             this.setState({active_modalTask: false})
@@ -48,15 +49,15 @@ export default class Board extends Component{
         else
             alert('Заполните поле "Name Task"')
     }
-
+    //Функция которая перебирает массив, в котором хранится информация о TaskList
     mapTable = (data) =>{
         return data.map(item =>{
             return(
                 <div key={item._id} className={classes.board__wrapper__item}>
                     <div className={classes.board__wrapper__item__nameTable}>
                         <b>{item.nameTable}</b>
-                        <div style={{display: 'flex'}}>
-                            <div className={classes.board__wrapper__item__btnAdd}>
+                        <div style={{display: 'flex', width: '200px'}}>
+                            <div className={classes.board__wrapper__item__btnAdd} style={{display: 'inline-block',textAlign:'right', marginRight: '5px'}}>
                                 <i className="far fa-plus-square" 
                                     style={{display: 'inline-block',textAlign:'right', marginRight: '5px'}}
                                     onClick={()=>this.setState({active_modalTask: true, tableId: item._id})}
@@ -75,6 +76,7 @@ export default class Board extends Component{
             )
         })
     }
+    //Функция которая перебирает массив, в котором хранится информация о задачах
     mapTask = (data,id) =>{
         if(data.length){
             return data.map(item =>{
@@ -162,7 +164,7 @@ export default class Board extends Component{
                         <div className={classes.board__wrapper__item__task__dueDate} style={colorDate}>
                             {item.dueDate ? moment(item.dueDate).format('DD.MM.YYYY') : null}
                         </div> 
-                        <div className={classes.deleteTask} onClick={()=>window.confirm('Вы действительно хотите удалить эту запись?') ? this.props.deleteTask(id,item._id):null}>Delete task</div>
+                        <div className={classes.deleteTask} onClick={()=>window.confirm('Вы действительно хотите удалить эту запись?') ? this.props.deleteTask(id,item._id):null}>Удалить задачу</div>
                     </div>
                 )
             })
@@ -200,18 +202,20 @@ export default class Board extends Component{
         const activeStyle = this.state.active_modalTask ? {display: 'flex'}:{display: 'none'};
         return(
             <div className={classes.board}>
+                {/* Форма для ввода данных о новом TaskList*/}
                 <Modal 
                     active={this.state.active_modal} 
                     setActive={()=>(this.setState({active_modal: false}))}
                     addTaskList={addTaskList}
                     board_id={board_id}
                 />
+                {/* Форма для ввода данных о новом задаче*/}
                 <div className={classes.addTask} style={activeStyle}>
                     <div className={classes.addTask__content}>
-                        <h3>Create Task</h3>
+                        <h3>Добавить задачу</h3>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Name Task:
+                                Название задачи:
                             </div>
                             <input 
                                 className={classes.inp} 
@@ -223,7 +227,7 @@ export default class Board extends Component{
                         </div>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Description: 
+                                Описание: 
                             </div>
                             <input 
                                 className={classes.inp} 
@@ -235,7 +239,7 @@ export default class Board extends Component{
                         </div>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Select executor: 
+                                Исполнитель: 
                             </div>
                             <select 
                                 className={classes.inp}
@@ -249,7 +253,7 @@ export default class Board extends Component{
                         </div>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Select priority: 
+                                Приоритет: 
                             </div>
                             <select 
                                 className={classes.inp}
@@ -267,24 +271,25 @@ export default class Board extends Component{
                             className={classes.addTask__content__buttonAdd}
                             onClick={()=>this.onAddTask()}
                         >
-                            ADD
+                            Добавить
                         </div>
                         <div 
                             className={classes.addTask__content__buttonCancel}
                             onClick={()=>this.setState({active_modalTask: false})}
                         >
-                            CANCEL
+                            Отменить
                         </div>
                     </div>
                 </div>
+                {/* Меню */}
                 <Nav />
                 <div className={classes.section__board}>
                     <h2 className={classes.title}>
-                        Page Board
+                        Задачи
                     </h2>
-                    <Link to='/users' className={classes.users}>Users</Link>
-                    <Link to='/info' className={classes.users}>Info</Link>
-                    <button className={classes.board__buttonAddTaskList} onClick={()=>{this.setState({active_modal: true})}}>Create a Task List</button>
+                    <Link to='/users' className={classes.users}>Исполнители</Link>
+                    <Link to='/info' className={classes.users}>Отчет</Link>
+                    <button className={classes.board__buttonAddTaskList} onClick={()=>{this.setState({active_modal: true})}}>Добавить "TaskList"</button>
                     <div className={classes.board__wrapper}>
                         {visuble}
                     </div>

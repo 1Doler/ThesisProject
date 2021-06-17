@@ -11,10 +11,13 @@ $bgcolortask: #f5f5f55d
     color: $bgcolor
     font-weight: 400
     font-size: 1.5em
+    padding: 0
+    margin: 0
     .top
         padding-left: 10px
         padding-top: 10px
         margin: 10px
+        margin-top: 0
         background-color: $bgcolortask
     &__logo
         font-weight: bold
@@ -27,6 +30,8 @@ $bgcolortask: #f5f5f55d
         border: 0.1px solid white
         background-color: white
     &__item
+        &__profile
+            cursor: pointer
         li
             list-style-type: none
             i
@@ -36,4 +41,7 @@ $bgcolortask: #f5f5f55d
             a
                 text-decoration: none
                 color: $bgcolor
-        
+@media screen and ( max-width:  768px)
+    .nav
+        width: 0
+        transform: scale(0)

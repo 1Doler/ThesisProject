@@ -45,13 +45,26 @@ router.post(
     }
         
 })
+router.post('/profile', async (req, res) =>{
+    try{
+        
+        const cand = await User.findOne({_id: req.body.id},{_id: false,email: false, password:false})
+        
+        res.status(200).json({ user: cand});
+    } catch(e){
+        res.status(400).json({message: 'Что-то пошло не так'});
+    }
+        
+})
 
 router.post(
     '/register', 
     ////проверка на корректность введённых значений пользователем
     [
         check('email', 'Некорректный email').isEmail(),
-        check('password', 'Некорректный email').isLength({min: 2})
+        check('password', 'Некорректный данные').isLength({min: 2}),
+        check('lastName', 'Некорректный данные').isLength({min: 2}),
+        check('firstName', 'Некорректный данные').isLength({min: 2})
     ],
     async (req, res) =>{
     try{
@@ -62,7 +75,7 @@ router.post(
                 message: 'Некорректные данные при регистрации'
             })
         }
-        const {email, password} = req.body;
+        const {email, password, firstName, lastName} = req.body;
         const candidate = await User.findOne({email})
         if(candidate){
             res.status(400).json({message: "Такой пользователь уже существует"})
@@ -70,7 +83,7 @@ router.post(
         //////Хеширование пароля
         const hashedPassword = await bcrypt.hash(password,6 );
 
-        const user = new User({email, password: hashedPassword});
+        const user = new User({email, password: hashedPassword, firstName, lastName});
         //запись в бд
         await user.save();
         

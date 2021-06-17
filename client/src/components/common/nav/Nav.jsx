@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom"
 import classes from './nav.module.sass'
-
+import Modal from './modal'
 export default class Nav extends Component{
     constructor(props){
         super(props);
-        this.state={}
+        this.state={
+            active: false
+        }
     }
 
 
@@ -13,6 +15,7 @@ export default class Nav extends Component{
     render(){
         return(
             <div className={classes.nav}>
+                <Modal active={this.state.active} close={()=>this.setState({active: false})}/>
                 <div className={classes.top}>
                     <div className={classes.nav__logo}>
                         <i className="fas fa-clipboard-list"></i>
@@ -22,11 +25,15 @@ export default class Nav extends Component{
                     <ul className={classes.nav__item}>
                         <li className={classes.nav__item__home}> 
                             <i className="fas fa-home"></i>
-                            <Link to='/'>Home</Link>
+                            <Link to='/'>Домашняя страница</Link>
+                        </li>
+                        <li className={classes.nav__item__profile}>
+                            <i class="fas fa-id-card-alt"></i>
+                            <span onClick={()=>{this.setState({active: true})}}>Профиль</span>
                         </li>
                         <li className={classes.nav__item__projects}>
                             <i className="fas fa-briefcase"></i>
-                            <Link to='/board'>Projects</Link>
+                            <Link to='/board'>Поекты</Link>
                         </li>
                     </ul>
                 </div>

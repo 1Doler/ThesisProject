@@ -26,7 +26,7 @@ export default class Projects extends Component{
        this.setState({[name]: e.target.value})
    }
    onClickBtn = (nameBoard, descr, status) =>{
-        if(nameBoard){
+        if(nameBoard.trim()){
             this.props.addBoard(nameBoard, descr, status);
             this.setState({active_modal: false})
         }
@@ -50,10 +50,10 @@ export default class Projects extends Component{
         return(
             <div className={classes.modal}>
                 <div className={classes.addTask__content}>
-                        <h3>Create new project</h3>
+                        <h3>Создать проект</h3>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Name project:
+                                Название проекта:
                             </div>
                             <input 
                                 className={classes.inp} 
@@ -65,7 +65,7 @@ export default class Projects extends Component{
                         </div>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Description: 
+                                Описание: 
                             </div>
                             <input 
                                 className={classes.inp} 
@@ -77,7 +77,7 @@ export default class Projects extends Component{
                         </div>
                         <div className={classes.addTask__content__item}>
                             <div className={classes.addTask__content__item__text}>
-                                Select priority: 
+                                Статус: 
                             </div>
                             <select 
                                 className={classes.inp}
@@ -92,20 +92,20 @@ export default class Projects extends Component{
                             className={classes.addTask__content__buttonAdd}
                             onClick={()=>this.onClickBtn(nameBoard, descr, status)}
                         >
-                            ADD
+                            Добавить
                         </div>
                         <div 
                             className={classes.addTask__content__buttonCancel}
                             onClick={()=>this.setState({active_modal: false})}
                         >
-                            CANCEL
+                            Отменить
                         </div>
                     </div>
             </div>
         )
     }
     render(){
-        const {board_data, onToggleImportant} = this.props;
+        const {board_data, onToggleImportant, deleteBoard} = this.props;
         const {search_data} = this.state;
         
         const onSearch = (value,isSearch) =>{
@@ -143,12 +143,12 @@ export default class Projects extends Component{
                         </Alert>
                     </Snackbar>
                     <div className={classes.board}>
-                        <h2>Page Projects</h2>
+                        <h2>Проекты</h2>
                         <Search Submit={onSearch}/>
                         <button onClick={()=>this.setState({active_modal: true})} className={classes.board__btn}>
-                            Create new project
+                            Добавить проект
                         </button>
-                        <ProjectItem data={vs} onToggleImportant={onToggleImportant}/>
+                        <ProjectItem data={vs} onToggleImportant={onToggleImportant} deleteBoard={deleteBoard}/>
                     </div>
                 </div>
             </div>

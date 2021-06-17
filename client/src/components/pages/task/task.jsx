@@ -155,15 +155,15 @@ export default class Task extends Component{
                         <span>BE2-I1</span>
                     </div>
                     
-                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <div >
+                        <Link to={'/board/'+'tasklist'}><i className="fas fa-window-close" style={{fontSize: '30px',marginTop: '5px'}}></i></Link>
                         <div className={classes.task__text}>
                             <input value={text} type='text' name='text' onChange={(e)=>{this.onChangeInput(e)}}/>
                         </div>
-                        <Link to={'/board/'+'tasklist'}><i className="fas fa-window-close" style={{fontSize: '30px'}}></i></Link>
                     </div>
                     <div className={classes.task__info}>
                         <div className={classes.task__info__author}>
-                            By {author}
+                            Задачу создал: {author}
                         </div>
                         <span>|</span>
                         <div className={classes.task__info__nameTable}>
@@ -176,11 +176,11 @@ export default class Task extends Component{
                             {[...optionStatus]}
                         </select>
                         <br/>
-                        <span>CURRENT STATUS </span> 
+                        <span>Изменить статус</span> 
                     </div>
                     <div className={classes.task__description}>
                         
-                        <h2>Description <i class="fas fa-expand-alt" onClick={()=>this.isShow()}></i></h2>
+                        <h2>Описание <i class="fas fa-expand-alt" onClick={()=>this.isShow()}></i></h2>
                         <div className={classes.task__description__text}>
                             
                             <textarea 
@@ -192,13 +192,13 @@ export default class Task extends Component{
                     </div>
                     <div className={classes.task__information}>
                         <h2 className={classes.task__information__title}>
-                            Task Information
+                            Информация о задаче
                         </h2>
                         <div className={classes.box}>
                             <div className={classes.task__information__wrapper}>
                                 <div className={classes.left}>
                                     <div className={classes.task__information__wrapper__owner}>
-                                        <p>Executor</p> 
+                                        <p>Исполнитель</p> 
                                         <select value={performer} onChange={(e)=>{this.setState({performer: e.target.value})}}>
                                             <option value=' '>None</option>
                                             {[...optionExec]}
@@ -206,13 +206,13 @@ export default class Task extends Component{
                                     </div>
                                     <div className={classes.task__information__wrapper__startDate}>
                                         <p className={classes.text}>
-                                            Start Date 
+                                            Дата начала 
                                         </p> 
                                         <input type='date' name='startDate' value={startDate} max={dueDate} onChange={(e)=>{this.onChangeInput(e)}}/>
                                     </div>
                                     <div className={classes.task__information__wrapper__duration}>
                                         <p className={classes.text}>
-                                            Duration 
+                                            Длительность  
                                         </p>
                                         <input type='text' name='duration' readOnly value={duration + ' d'}/>
                                     </div>
@@ -220,7 +220,7 @@ export default class Task extends Component{
                                 <div className={classes.right}>
                                     <div className={classes.task__information__wrapper__priority}>
                                         <p className={classes.text}>
-                                            Priority 
+                                            Приоритет 
                                         </p>
                                         <select value={priority} onChange={(e)=>{this.setState({priority: e.target.value})}}>
                                             {[...optionPriority]}
@@ -228,13 +228,13 @@ export default class Task extends Component{
                                     </div>
                                     <div className={classes.task__information__wrapper__dueDate}>
                                         <p className={classes.text}>
-                                            Due Date
+                                            Дата окончания
                                         </p>
                                         <input type='date' name='dueDate' min={startDate} value={dueDate} onChange={(e)=>{this.onChangeInput(e)}}/>
                                     </div>
                                     <div className={classes.task__information__wrapper__completionPercentage}>
                                         <p className={classes.text}>
-                                            Complit 
+                                            Процент выполнения   
                                         </p>
                                         <select value={completionPercentage} onChange={(e)=>{this.setState({completionPercentage: e.target.value})}}>
                                             {[...optionCP]}
@@ -249,7 +249,7 @@ export default class Task extends Component{
                         color="secondary" 
                         onClick={()=>this.props.updateTable({_id, tblId, description, text,status,performer,dueDate,startDate,priority, duration,completionPercentage})}
                     >
-                        Save
+                        Сохранить
                     </Button>
                 </div>
             </div>

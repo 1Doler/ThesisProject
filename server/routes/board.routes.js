@@ -28,6 +28,14 @@ router.post('/addboard', async (req, res) =>{
         res.status(400).json({message: 'Что-то пошло не так'});
     }
 })
+router.post('/delboard', async (req, res) =>{
+    try{
+        await Board.deleteOne({_id: req.body.id});
+        await Table.deleteMany({boardId: req.body.id})
+    }catch(e){
+        res.status(400).json({message: 'Ошибочка'})
+    }
+})
 router.post('/ontoggleimportant', async (req, res)=>{
     try{
         const data = req.body;
